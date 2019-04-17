@@ -40,7 +40,7 @@ The DISCO signal processing is dividing in 3 steps:
 2. Web Resources
 ================
 
-DISC0's home page is at:
+DISCO's home page is at:
 
 	https://www.xxxx.hzg/
 
@@ -48,7 +48,7 @@ Please be sure to visit this site for information, documentation,
 tutorials, news, etc.
 
 
-The latest version of DISC0 can be found at:
+The latest version of DISCO can be found at:
 
 	https://www.xxxx.hzg/downloads/
 
