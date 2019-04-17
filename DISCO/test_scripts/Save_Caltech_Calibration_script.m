@@ -32,7 +32,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Caltech_calibration_filename = '/media/d1/Drone_current_fit/code/DISC0_camera_calibration/Calibration_examples/Matlab_Caltech/Phantom3_4096/Calib_Results.mat';
-DISCO_calibration_filename = '/media/d1/Drone_current_fit/code/DISC0_camera_calibration/DISCO_Calibration_files/Phantom3_v1_Caltech_4096x2160.mat';
+Caltech_calibration_filename = '/media/d1/Drone_current_fit/githup/v1/DISCO/Calibration_examples/Matlab_Caltech/Phantom3_3840/Calib_Results.mat';
+DISCO_calibration_filename = '/media/d1/Drone_current_fit/githup/v1/DISCO/DISCO_CameraCalib/Phantom3_v1_Caltech_3840x2160.mat';
 
 [DISCO_CamCalib] = CaltechCalibration2file(Caltech_calibration_filename, DISCO_calibration_filename);
