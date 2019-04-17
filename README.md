@@ -9,7 +9,10 @@ DISpersion Relation Currents Observations
 This is the first stable release: DISCO 1.00, for detailed 
 installation instructions, see the file INSTALL.
 
+
+
 1. DISCO
+
 ================
 
 DISCO is a set of tools designed to extract water surface 
@@ -37,7 +40,9 @@ The DISCO signal processing is dividing in 3 steps:
 
 
 
+
 2. Web Resources
+
 ================
 
 DISCO's home page is at:
@@ -57,5 +62,7 @@ The latest version of DISCO can be found at:
 Have fun,
 
 Ruben Carrasco
+
 Michael Stresser
+
 Jochen Horstmann
