@@ -1,6 +1,10 @@
 %
-% This is a testing script to check if a Quadrocopter video can be read
-% by the matlab videoreader, and if the video metadata information is  
+% This script to check if a Quadrocopter video can be read
+% by the matlab videoreader, and if the video metadata information is legible 
+% by 'get_mediainfo_information.m'.
+%
+% The central frame of the video will be displated for 5 seconds, and the 
+% metada information will be displayed in matlab command line.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
