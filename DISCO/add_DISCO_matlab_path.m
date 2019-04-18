@@ -88,7 +88,7 @@ disp(' ');
 [status,result] = system('mediainfo --Version');
 disp(result);
 
-if status ~= 255
+if (status ~= 255 && isunix) || (ispc && status ~= 0)
    warning('Mediainfo probably not installed.') 
 end
 
