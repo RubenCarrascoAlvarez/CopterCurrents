@@ -9,7 +9,7 @@ DISpersion Relation Currents Observations
 This is the first stable release: DISCO 1.00, for detailed 
 installation instructions, see the file INSTALL.
 
-1. DISCO
+1. DISCO <br />
 ================
 
 DISCO is a set of tools designed to extract water surface 
@@ -35,22 +35,22 @@ The DISCO signal processing is dividing in 3 steps:
 	3) Fit the most probable current, applying the wave dispersion relation 
 	in a spectral energy-based maximization technique, in every squared region.
 
-2. LICENSE
+2. LICENSE <br />
 ================
 
-1) The DISCO application core, and other portions of the official DISCO
+* The DISCO application core, and other portions of the official DISCO
   distribution not explicitly licensed otherwise, are licensed under
   the GNU GENERAL PUBLIC LICENSE -- see the 'LICENSE' file in this
   directory for details.
 
-2) If you create a program which invokes (or provides) methods within
+* If you create a program which invokes (or provides) methods within
   (or for) the GPL DISCO application core, then the DISCO developers'
   position is that this is a 'mere aggregation' of the program 
   invoking the method and the program implementing the method as per
   section 2 of the GNU General Public License.
 
 
-3. WEB RESOURCES (TO DO)
+3. WEB RESOURCES (TO DO) <br />
 ================
 
 DISCO's home page is at:
@@ -69,6 +69,6 @@ The latest version of DISCO can be found at:
 
 Have fun,
 
-Ruben Carrasco,
-Michael Stresser,
-Jochen Horstmann.
+Ruben Carrasco <br />
+Michael Stresser <br />
+Jochen Horstmann <br />
