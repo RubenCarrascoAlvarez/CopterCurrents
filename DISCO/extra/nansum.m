@@ -1,6 +1,6 @@
 function [DATA_sum] = nansum(DATA,dim)
-% Retrieve sum in dimemsion 'dim' of the matrix 'DATA', removing the 
-% NaN data first. 
+% Retrieve sum in dimension 'dim' of the matrix 'DATA', ignoring the 
+% NaN values. 
 %
 % Input:
 %    DATA: matrix data

@@ -1,6 +1,6 @@
 function [DATA_mean] = nanmean(DATA,dim)
-% Retrieve average in dimemsion 'dim' of the matrix 'DATA', removing the 
-% NaN data first. 
+% Retrieve the average in dimension 'dim' of the matrix 'DATA', ignoring the 
+% NaN values. 
 %
 % Input:
 %    DATA: matrix data
