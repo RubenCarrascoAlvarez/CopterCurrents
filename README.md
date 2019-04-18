@@ -9,6 +9,8 @@ DISpersion Relation Currents Observations
 This is the first stable release: DISCO 1.00, for detailed 
 installation instructions, see the file INSTALL.
 
+
+
 1. DISCO <br />
 ================
 
@@ -35,6 +37,8 @@ The DISCO signal processing is dividing in 3 steps:
 	3) Fit the most probable current, applying the wave dispersion relation 
 	in a spectral energy-based maximization technique, in every squared region.
 
+
+
 2. LICENSE <br />
 ================
 
@@ -50,16 +54,16 @@ The DISCO signal processing is dividing in 3 steps:
   section 2 of the GNU General Public License.
 
 
+
+
 3. WEB RESOURCES (TO DO) <br />
 ================
 
 DISCO's home page is at:
-
 	https://www.xxxx.hzg/
 
 Please be sure to visit this site for information, documentation,
 tutorials, news, etc.
-
 
 The latest version of DISCO can be found at:
 
