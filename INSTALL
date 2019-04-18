@@ -114,7 +114,7 @@ There are some basic steps to building and installing DISCO:
 2) From Matlab enviroment, go to the DISCO folder and run the script 'add_DISCO_matlab_path.m' 
 	to add the DISCO folders to the matlab path.
 
-	If the external libraies are not installed, the displayed output should be:
+	Matlab display the following messages if the external libraies are not available:
 	-----------------------------------------------------------------------------------------------------
 	MATLAB Version: 9.6.0.1072779 (R2019a)
 	MATLAB License Number: 932330
@@ -137,7 +137,7 @@ There are some basic steps to building and installing DISCO:
 	Camera Calibration Toolbox: NOT FOUND (Optional)
 
 
-	If the external libraies are installed, the displayed output should be:
+	Matlab display the following messages if the external libraies are available:
 	-----------------------------------------------------------------------------------------------------
 	MATLAB Version: 9.6.0.1072779 (R2019a)
 	MATLAB License Number: 932330
@@ -160,5 +160,27 @@ There are some basic steps to building and installing DISCO:
 	Camera Calibration Toolbox: AVAILABLE (Optional)
 
 
+----------------
+3.Test :
+----------------
 
+As final test step, check the DISCO toolbox with your own drone video, go to the 'test_scripts' folder in 
+'/DISCO/test_scripts/' and run the script 'read_Quadcopter_video_script.m'. Edit the line 40 
+"video_fname = 'path to test video/test_video.MP4';" with your own video filename.
+
+After run the script, a frame will be displayed during 5 seconds, and the metadata video information will 
+be displayed in matlab command line:
+
+	Metadata info obtained
+	Longitude :10.5573 deg
+	Latitude :53.3693 deg
+	Altitude :203.8 meters
+	time stamp: 04-Apr-2017 10:02:33
+	Camera heading:127.4 deg
+	Camera pitch:-90 deg
+	Camera roll :0 deg
+
+
+Now, DISCO is ready to be used. Read the manual to accomplish the camera calibration (triangle_calibration_FOV_script.m) 
+and run a current fit (paper_script_FOV.m).
 
