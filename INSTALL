@@ -1,1 +1,164 @@
-TO DO
+-----------------------------------------
+Installation instructions for DISC0 v1.00
+-----------------------------------------
+
+There are some basic steps to building and installing DISCO:
+
+----------------
+1.Requierements:
+----------------
+
+- MATLAB® (mandatory)
+
+	DISCO is a toolbox designed under MATLAB® enviroment, and requires a MATLAB® 
+	software license, which you can obtain by purchasing products or downloading 
+	a product trial. For more information:
+
+	https://www.mathworks.com/help/install/index.html
+
+	DISCO does not requiere any extra MATLAB® toolbox, but the 'Parallel Computing 
+	Toolbox' speed up the current fit calculations. The 'Parallel Computing Toolbox' 
+	license is optional, not mandatory.
+
+- Drone video Codecs (mandatory)
+	
+	DISCO reads the drone video frames using the Matlab 'videoreader', which sometimes 
+	requieres expecific codecs. For more information about the compatible codecs:  
+
+	https://www.mathworks.com/help/matlab/import_export/supported-video-file-formats.html
+
+	Note: Problems were reported during DISCO development, the DJI video codecs 
+	(MPEG-4, H.264) under linux enviroment were not easy to install. Mathworks suggested 
+	the following work around solution:
+
+	https://www.mathworks.com/matlabcentral/answers/94531-why-do-i-receive-an-error-when
+	-creating-a-videoreader-object-on-linux-in-matlab-r2010b-7-11#answer_103883
+
+- Mediainfo (mandatory)
+
+	DISCO needs mediainfo application to read video metadata information. The video metadata 
+	information contains the the drone position (longitude, latitude and altitude), and the
+	camera heading, pitch and roll angles, which are necessary to georeference the video data, 
+	and obtain the real world coordenates.
+
+	MediaInfo is available in thje following URLs:
+
+ 	MediaInfoLib - v0.7.82
+	https://mediaarea.net/en/MediaInfo
+ 	https://mediaarea.net/en/MediaInfo/Download/Ubuntu
+	https://mediaarea.net/en/MediaInfo/Download/Windows
+
+- External MATLAB® library 'deg2utm' (optional)
+
+	The MATLAB® library 'deg2utm' is an external library used to plot the drone current fits
+	in UTM coordenates. It is not necessary to run DISCO. 
+
+	'deg2utm' is available in the mathworks fileexchange repository:
+
+	https://www.mathworks.com/matlabcentral/fileexchange/10915-deg2utm
+
+	Author: Rafael Palacios, Universidad Pontificia Comillas, Madrid, Spain 
+
+	Installation instructions: After download the file, unzip the content in the following folder:
+
+	../DISCO/external_libraries/deg2utm/
+
+
+- External MATLAB® library 'Camera Calibration Toolbox' (optional)
+	
+	The Caltech 'Camera Calibration Toolbox' for MATLAB® is an external library which allows to 
+	calibrate cameras. This library was also implemented in OpenCV, so adding this library to DISCO
+	let us to use OpenCV for camera calibration. The 'Camera Calibration Toolbox' is optional, 
+	DISCO provide his own camera calibration method (FOV calibration). 
+
+	Download url: 	http://www.vision.caltech.edu/bouguetj/calib_doc/download/index.html
+	Toolbox manual: http://www.vision.caltech.edu/bouguetj/calib_doc/
+
+	Author: Jean-Yves Bouguet,jean-yves.bouguet@intel.com. 
+
+	Installation instructions: After download the file, unzip the content in the following folder:
+
+	../DISCO/external_libraries/TOOLBOX_calib/
+
+	A camera calibration by 'Camera Calibration Toolbox' is provided with DISCO: 
+	../Calibration_examples/Matlab_Caltech/Phantom3_3840
+
+
+- OpenCV (optional)
+
+	OpenCV is the most spreaded 'Computer vision' open-source platform for Photogrammetry appalications. 
+	Thanks to the 'Camera Calibration Toolbox' DISCO is able to use camera calibrations performed by OpenCV.
+	For more information regarding OpenCV:
+
+	https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html
+	https://docs.opencv.org/master/d9/df8/tutorial_root.html
+
+	A camera calibration by 'OpenCV' is provided with DISCO: 
+	../Calibration_examples/OpenCV/Phantom3_3840
+
+
+
+----------------
+2.Installation :
+----------------
+
+1) Install the requeriments describeb in the previous chapter:
+
+	- MATLAB® (mandatory)
+	- Drone video Codecs (mandatory)
+	- Mediainfo (mandatory)
+	- External MATLAB® library 'deg2utm' (optional)
+	- External MATLAB® library 'Camera Calibration Toolbox' (optional)
+	- OpenCV (optional)
+
+2) From Matlab enviroment, go to the DISCO folder and run the script 'add_DISCO_matlab_path.m' 
+	to add the DISCO folders to the matlab path.
+
+	Matlab display the following messages if the external libraies are not available:
+	-----------------------------------------------------------------------------------------------------
+	MATLAB Version: 9.6.0.1072779 (R2019a)
+	MATLAB License Number: 932330
+	Operating System: Linux 4.15.0-47-generic #50~16.04.1-Ubuntu SMP Fri Mar 15 16:06:21 UTC 2019 x86_64
+	Java Version: Java 1.8.0_181-b13 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+	-----------------------------------------------------------------------------------------------------
+	MATLAB                                                Version 9.6         (R2019a)
+	 
+	mediainfo --Version: Signal 127
+	MediaInfo Command line, 
+	MediaInfoLib - v0.7.82
+
+	nanmean function found.
+	nansum  function found.
+	 
+	----------------------------------------------
+	Checking optional libraries:
+	----------------------------------------------
+	deg2utm: NOT FOUND (Optional)
+	Camera Calibration Toolbox: NOT FOUND (Optional)
+
+
+	Matlab display the following messages if the external libraies are available:
+	-----------------------------------------------------------------------------------------------------
+	MATLAB Version: 9.6.0.1072779 (R2019a)
+	MATLAB License Number: 932330
+	Operating System: Linux 4.15.0-47-generic #50~16.04.1-Ubuntu SMP Fri Mar 15 16:06:21 UTC 2019 x86_64
+	Java Version: Java 1.8.0_181-b13 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+	-----------------------------------------------------------------------------------------------------
+	MATLAB                                                Version 9.6         (R2019a)
+	 
+	mediainfo --Version: Signal 127
+	MediaInfo Command line, 
+	MediaInfoLib - v0.7.82
+
+	nanmean function found.
+	nansum  function found.
+	 
+	----------------------------------------------
+	Checking optional libraries:
+	----------------------------------------------
+	deg2utm: AVAILABLE (Optional)
+	Camera Calibration Toolbox: AVAILABLE (Optional)
+
+
+
+
