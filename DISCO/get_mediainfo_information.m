@@ -1,6 +1,9 @@
 function [LON,LAT,Height,timestamp, mediainfo_string,yaw,pitch,roll] = get_mediainfo_information(video_filename)
 % Use mediainfo application to retrieve video metadata information.
-%
+%   get_mediainfo_information was designed expecifically for DJI 
+%   Phamtom 3 videos, and should be compatible with any DJI metadata 
+%   video information.
+%   
 %   Note: MediaInfo is not part of DISCO, and must be installed manually.
 %         Media info can be found in the following links:
 %
