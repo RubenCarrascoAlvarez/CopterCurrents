@@ -120,6 +120,9 @@ for i1 = 1:length(Georeference_Struct_config.video_ts)
 
 end
 
+% destroy video Reader object
+delete(v);
+clear v;
 
 end
 
