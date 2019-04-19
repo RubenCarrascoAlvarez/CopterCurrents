@@ -39,14 +39,18 @@ There are some basic steps to building and installing DISCO:
 	DISCO needs mediainfo application to read video metadata information. The video metadata 
 	information contains the the drone position (longitude, latitude and altitude), and the
 	camera heading, pitch and roll angles, which are necessary to georeference the video data, 
-	and obtain the real world coordenates.
+	and obtain the real world coordenates. DISCO needs the commad 'mediainfo' accesible in the 
+	operating system.
 
-	MediaInfo is available in thje following URLs:
+	MediaInfo is available in the following URLs:
 
  	MediaInfoLib - v0.7.82
 	https://mediaarea.net/en/MediaInfo
  	https://mediaarea.net/en/MediaInfo/Download/Ubuntu
-	https://mediaarea.net/en/MediaInfo/Download/Windows
+	https://mediaarea.net/download/binary/mediainfo/18.12/MediaInfo_CLI_18.12_Windows_x64.zip
+	
+	Note: In windows operating system, install the MediaInfo CLI version (Command Line Interface)
+	and add the MediaInfo folder to system path. 
 
 - External MATLAB® library 'deg2utm' (optional)
 
