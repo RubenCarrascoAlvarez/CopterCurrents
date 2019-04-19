@@ -41,6 +41,13 @@
 DISCO_main_path = [pwd filesep];
 paths2add_str = genpath(DISCO_main_path);
 
+% get genpath separator
+if isunix
+    genpath_char = ':';
+else
+    genpath_char = ';';
+end
+
 % list of folder to add to the path
 % valid_list_folders = {'external_libraries'};
 valid_list_folders = {'external_libraries','test_scripts'};
@@ -51,7 +58,7 @@ if exist('nanmean','file') ~= 2 || exist('nansum','file') ~= 2
 end
  
 % keep only paths included in valid_list_folders
-str_delimited = split(paths2add_str,':');
+str_delimited = split(paths2add_str,genpath_char);
 n_match_found = zeros(size(str_delimited));
 
 for i1 = 1:length(valid_list_folders) 
@@ -63,7 +70,10 @@ end
 str_delimited(n_match_found == 0) = [];
 
 % generate new genpath string
-paths2add_str_clean = [DISCO_main_path ':'];
+
+
+paths2add_str_clean = [DISCO_main_path genpath_char];
+
 for i1 = 1:length(str_delimited) 
     paths2add_str_clean = [paths2add_str_clean str_delimited{i1} ':'];
 end
