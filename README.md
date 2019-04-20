@@ -17,7 +17,7 @@ installation instructions, see the file INSTALL.
 DISCO is a set of tools designed to extract water surface 
 current fields (flow speeds) from UAV videos.
 
-The Disco current extraction is based in the wave disperion relation, 
+The DISCO current extraction is based in the wave disperion relation, 
 and the complete process is described in following work:
 
 M. Streßer, R. Carrasco and J. Horstmann, "Video-Based Estimation 
