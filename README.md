@@ -1,10 +1,10 @@
 # DISCO
-DISpersion Relation Currents Observations
+DISpersion relation based Currents Observations
 
-                   ---------------------------------------------
-                   DISpersion based Current Observations (DISCO)
+                   --------------------------------------------------------
+                   DISpersion relation based Currents Observations (DISCO)
                       	     1.00 Development Branch
-                   ---------------------------------------------
+                   ---------------------------------------------------------
 
 This is the first stable release: DISCO 1.00, for detailed 
 installation instructions, see the file INSTALL.
