@@ -1,3 +1,4 @@
+%
 % This script process the video 'DJI_0002.MP4' used in the paper: 
 % 
 %   M. Streßer, R. Carrasco and J. Horstmann, "Video-Based Estimation 
@@ -5,7 +6,7 @@
 %   and Remote Sensing Letters, vol. 14, no. 11, pp. 2027-2031, Nov. 2017.
 %   doi: 10.1109/LGRS.2017.2749120
 %
-% The Georeferencing method use the Caltech library (compatible with OpenCV).
+% The Georeferencing method is the FOV calibration (as in the paper).
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -38,74 +39,148 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 clear 
 close all;
 
-video_fname = '/media/d1/Drone_current_fit/data/over_the_river/PHANTOM3/20170404/DJI_0002.MP4';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% read Drone video - step 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% video to be analysed
+video_fname = '/path2thevideo/DJI_0002.MP4';
+
+% time stamps to be used in the video [initial_time  end_time]
+time_limits = [5 35];
+
+% time between frames in seconds
 dt = 0.10;
-time_limits = [0 60];
-offset_home2water_Z = 0;
 
+% distance between the home point and the water surface in meters
+offset_home2water_Z = 0.8;
 
-DISCO_calibration_filename = '/media/d1/Drone_current_fit/code/DISC0_camera_calibration/DISCO_Calibration_files/Phantom3_v1_OpenCV_3840x2160.mat';
+% FOV calibration structure to be used
+DISCO_calibration_filename = '/path2CameraCalibration_folder/Phantom3_v1_OpenCV_3840x2160.mat';
 
-% get georeference configuration
+% Create a Georeference configuration structure
 [Georeference_Struct_config] = create_georeference_struct(...
                 video_fname, dt, time_limits, offset_home2water_Z, ...
                 DISCO_calibration_filename);
+            
+            
+            
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Rectify video and obtain REAL WORLD coordenates - step 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%          
 
-% geo reference data
+% Apply Georeference_Struct_config and retrieve the Image sequence
+% corrected
 IMG_SEQ = run_Georeference_Struct_config(Georeference_Struct_config);
 
-% save('IMG_SEQ_0.mat','IMG_SEQ','-v7.3','-nocompression');
+% save('IMG_SEQ.mat','IMG_SEQ','-v7.3','-nocompression');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Slice Rectified sequence and define fit parameters - step 3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 
 % generate fit structure
-sq_size_m = 8; % square fit size in meters
-sq_dist_m = sq_size_m/2; % distance between square fit in meters
-mask_2D = []; % 2D mask inidication the valid points for the fit
-nan_percentage_thr = 5; % percentage of area to nan to do not use the square to fit
 
-% fit paramters
+% square fit size in meters
+sq_size_m = 8; 
+
+% distance between square fit in meters
+sq_dist_m = sq_size_m/2; 
+
+% 2D mask inidication the valid points for the fit
+mask_2D = []; 
+
+% percentage of area to nan to do not use the square to fit
+nan_percentage_thr = 5;
+
+% Ux current range to fit [m/s]
 Ux_limits_FG = [-2.0 2.0];
-Uy_limits_FG = [-2.0 2.0];
-U_FG_res = 0.1;
-w_width_FG = 1;
-U_SG_res = U_FG_res/10;
-w_width_SG = w_width_FG/2;
-waveLength_limits_m = 2*pi./[10.6657 1.5641]; % [min_waveLength max_waveLength] used in the fit % K [10.6657 1.5641 ]
-wavePeriod_limits_sec = 2*pi./[17 5]; % [min_wavePeriod max_wavePeriod] used in the fit             % W [5 17]
-water_depth_mask_2D = [];
 
+% Uy current range to fit [m/s]
+Uy_limits_FG = [-2.0 2.0];
+
+% First guess step [m/s]
+U_FG_res = 0.1;
+
+% First guess filter width [rad/s]
+w_width_FG = 1;
+
+% Second guess step [m/s]
+U_SG_res = U_FG_res/10;
+
+% Second guess filter width [rad/s]
+w_width_SG = w_width_FG/2;
+
+% wavelength limits to be used in the fit 
+% [shorter_waveLength longer_waveLength] in meters
+waveLength_limits_m = [0.5891  4.0171]; 
+
+% wave Period limits to be used in the fit 
+% [smaller_wavePeriod longer_wavePeriod] in seconds
+wavePeriod_limits_sec = [0.3696 1.2566]; 
+
+% water depth mask in meters
+% water depth in meters of every pixels in 
+% water_depth_mask_2D(IMG_SEQ.gridX,IMG_SEQ.gridY)
+%
+% Note: if water_depth_mask_2D is a scalar, the same depth will be applied
+% for the complete grid.
+water_depth_mask_2D = 10; % 10 meters
+
+
+% generate structure with the fit structure
 STCFIT = generate_STCFIT_from_IMG_SEQ(IMG_SEQ, sq_size_m, sq_dist_m,mask_2D,nan_percentage_thr,water_depth_mask_2D,...
          Ux_limits_FG,Uy_limits_FG,U_FG_res,w_width_FG,U_SG_res,w_width_SG,waveLength_limits_m,...
          wavePeriod_limits_sec);
 
-% plot STCFIT
+     
+% plot STCFIT structure
 % [h] = plot_STCFIT(STCFIT);     
 
-% % display paramters in window  
+% % display  spectrum in window 'n_window'
 % n_window = 3168;
 % display_fit_guess(IMG_SEQ,STCFIT,n_window)     
 
 
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Run current fit and plot results - step 4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
 % run current fit in every square
 STCFIT = run_current_fit(IMG_SEQ,STCFIT);
 
-
-% plot STCFIT
-% [h] = plot_STCFIT(STCFIT);
-
-save('paper_caltech.mat','STCFIT','IMG_SEQ','-v7.3','-nocompression');
+% save data
+save('paper_FOV.mat','STCFIT','IMG_SEQ','-v7.3','-nocompression');
 
 
+% retrieve current maps and  plot 
+
+% filter with SNR
+% choose going to direction for currents
 currentdir_flag = 1;
-SNR_thr = 0;
-SNR_density_thr = 3;
+% set Signal to Noise Ratio threshold 
+SNR_thr = 0; 
+% set Signal to Noise Ratio density threshold 
+SNR_density_thr = 3; 
+
+% retrieve current maps
 [UTM_currents, Camera_currents] = get_currents_from_STCFIT(STCFIT,SNR_thr,SNR_density_thr,currentdir_flag);
 
-arrow_scale = 5;
+
+
+% plot in camera coordenates
+% scale factor for arrows
+arrow_scale = 5; 
+
+% plot current maps in camera coordenate system
 h  = plot_currents_map(Camera_currents,STCFIT,arrow_scale);
+
+% plot in UTM coordenates (deg2utm library needed)
 h  = plot_currents_map(UTM_currents,STCFIT,arrow_scale);
 
