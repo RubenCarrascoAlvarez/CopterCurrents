@@ -109,12 +109,11 @@ if exist('nan_percentage_thr','var') ==0 || isempty(nan_percentage_thr)
 end
 
 if exist('water_depth_mask_2D','var') ==0 || isempty(water_depth_mask_2D)
-    default_depth = 10;
-    water_depth_mask_2D = repmat(default_depth,[size_IMG_SEQ(1) size_IMG_SEQ(2)]);
+    water_depth_mask_2D = 10;
 end
 
 if isscalar(water_depth_mask_2D) % if the mask a unique 1 value, use this value for all the 2D space
-    water_depth_mask_2D = repmat(water_depth_mask_2D,[size(size_IMG_SEQ,1) size(size_IMG_SEQ,2)]);
+   water_depth_mask_2D = repmat(water_depth_mask_2D,[size(IMG_SEQ.IMG,1) size(IMG_SEQ.IMG,2)]);
 end
 
 if exist('Ux_limits_FG','var') ==0 || isempty(Ux_limits_FG)
