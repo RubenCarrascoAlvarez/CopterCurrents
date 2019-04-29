@@ -1,4 +1,4 @@
-function display_fit_guess(IMG_SEQ,STCFIT,n_window,Ux,Uy,w_cut_dir)
+function display_fit_guess_v2(IMG_SEQ,STCFIT,n_window,w_cut_dir)
 %   GUI very usefull to check the parameters in STCFIT applied to the data 
 %   IMG_SEQ.
 %
@@ -68,14 +68,6 @@ function display_fit_guess(IMG_SEQ,STCFIT,n_window,Ux,Uy,w_cut_dir)
 
 
     
-if exist('Ux','var') == 0 || isempty(Ux)
-    Ux = 0;
-end
-
-if exist('Uy','var') == 0 || isempty(Uy)
-    Uy = 0;
-end
-
 if exist('w_cut_dir','var') == 0 || isempty(w_cut_dir)
     w_cut_dir = 90;
 end
@@ -96,40 +88,51 @@ w_width = STCFIT.fit_param.w_width_FG;
 K_cut = min(Spectrum.Kx_3D(:)):Spectrum.dKx:max(Spectrum.Kx_3D(:));
 W_cut = squeeze(Spectrum.W_3D(1,1,:));
 
+% process fit 
+disp('Starting fit calculation, Wait ... ');
+out_fit =  fit_Spectrum2dispersionRelation(Spectrum,STCFIT.fit_param,STCFIT.Windows.average_depth_win(n_window));
+disp('Fit calculation finished.');
+
+% Ux and Uy to the fitted current.
+Ux = out_fit.SG_fit.Ux_fit;
+Uy = out_fit.SG_fit.Uy_fit;
+
 
 %%%%%%%%%%%%%%%%        
 % create figure       
 %%%%%%%%%%%%%%%%    
 h = figure('units','normalized','outerposition',[0 0 1 1]);
-ax(1) =  subplot(2,2,1);
-ax(2) =  subplot(2,2,2);
-% ax(3) =  subplot(2,2,3);
-ax(4) =  subplot(2,2,4);
+ax(1) =  subplot(2,3,1);
+ax(2) =  subplot(2,3,2);
+ax(3) =  subplot(2,3,3);
+% ax(4) =  subplot(2,3,4);
+ax(5) =  subplot(2,3,5);
+ax(6) =  subplot(2,3,6);
 
 % create text box annotations
 scroll_y_size = 0.04;
 scroll_y_offset = scroll_y_size * 2.0;
 
 % ann 1
-pos_ann_1 = [ax(1).Position(1) ax(4).Position(2) ax(4).Position(3)/2 scroll_y_size];
+pos_ann_1 = [ax(1).Position(1) ax(5).Position(2) ax(5).Position(3)/2 scroll_y_size];
 str_ann = ['filter width ' num2str(w_width) ' [rad/s]' ];
 h_ann_1 = annotation('textbox', pos_ann_1, 'String', str_ann,'FontWeight','Bold',...
                      'HorizontalAlignment','center','VerticalAlignment','middle');
 
 % ann 2
-pos_ann_2 = [ax(1).Position(1) pos_ann_1(2)+scroll_y_offset ax(4).Position(3)/2 scroll_y_size];
+pos_ann_2 = [ax(1).Position(1) pos_ann_1(2)+scroll_y_offset ax(5).Position(3)/2 scroll_y_size];
 str_ann = ['W cut direction: ' num2str(w_cut_dir) ' [deg]' ];
 h_ann_2 = annotation('textbox', pos_ann_2, 'String', str_ann,'FontWeight','Bold',...
                      'HorizontalAlignment','center','VerticalAlignment','middle');
 
 % ann 3
-pos_ann_3 = [ax(1).Position(1) pos_ann_2(2)+scroll_y_offset ax(4).Position(3)/2 scroll_y_size];
+pos_ann_3 = [ax(1).Position(1) pos_ann_2(2)+scroll_y_offset ax(5).Position(3)/2 scroll_y_size];
 str_ann = ['Uy: ' num2str(Uy) ' [m/s]' ];
 h_ann_3 = annotation('textbox', pos_ann_3, 'String', str_ann,'FontWeight','Bold',...
                      'HorizontalAlignment','center','VerticalAlignment','middle');
 
 % ann 4
-pos_ann_4 = [ax(1).Position(1) pos_ann_3(2)+scroll_y_offset ax(4).Position(3)/2 scroll_y_size];
+pos_ann_4 = [ax(1).Position(1) pos_ann_3(2)+scroll_y_offset ax(5).Position(3)/2 scroll_y_size];
 str_ann = ['Ux: ' num2str(Ux) ' [m/s]' ];
 h_ann_4 = annotation('textbox', pos_ann_4, 'String', str_ann,'FontWeight','Bold',...
                      'HorizontalAlignment','center','VerticalAlignment','middle');
@@ -140,8 +143,9 @@ h_ann_4 = annotation('textbox', pos_ann_4, 'String', str_ann,'FontWeight','Bold'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 h.UserData = struct('Spectrum',Spectrum,'K_cut',K_cut,'W_cut',W_cut,...
             'water_depth',water_depth,'Ux',Ux,'Uy',Uy,'w_cut_dir',w_cut_dir,...
-            'w_width',w_width,'ax',ax,'h_ann_1',h_ann_1,'h_ann_2',h_ann_2,...
-            'h_ann_3',h_ann_3,'h_ann_4',h_ann_4);
+            'w_width',w_width,'out_fit',out_fit,'ax',ax,'h_ann_1',h_ann_1,...
+            'h_ann_2',h_ann_2,'h_ann_3',h_ann_3,'h_ann_4',h_ann_4,...
+            'fit_param',STCFIT.fit_param);
         
 
 
@@ -150,7 +154,7 @@ h.UserData = struct('Spectrum',Spectrum,'K_cut',K_cut,'W_cut',W_cut,...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % create slider w_width
-ypos_sc1 = [ax(1).Position(1)+(ax(4).Position(3)/2) ax(4).Position(2) ax(4).Position(3)/2 scroll_y_size];
+ypos_sc1 = [ax(1).Position(1)+(ax(5).Position(3)/2) ax(5).Position(2) ax(5).Position(3)/2 scroll_y_size];
 ymin_sc1 = 0;
 ymax_sc1 = 4;
 
@@ -162,7 +166,7 @@ h_sc1 = uicontrol('style','slider', ...
 
 
 % create slider w_cut_dir
-ypos_sc2 = [ax(1).Position(1)+(ax(4).Position(3)/2) ypos_sc1(2)+scroll_y_offset ax(4).Position(3)/2 scroll_y_size];
+ypos_sc2 = [ax(1).Position(1)+(ax(5).Position(3)/2) ypos_sc1(2)+scroll_y_offset ax(5).Position(3)/2 scroll_y_size];
 ymin_sc2 = 0;
 ymax_sc2 = 360;
 
@@ -173,7 +177,7 @@ h_sc2 = uicontrol('style','slider', ...
     'value',h.UserData.w_cut_dir,'SliderStep', [1/360 , 1/4]);    
 
 % create slider Uy
-ypos_sc3 = [ax(1).Position(1)+(ax(4).Position(3)/2) ypos_sc2(2)+scroll_y_offset ax(4).Position(3)/2 scroll_y_size];
+ypos_sc3 = [ax(1).Position(1)+(ax(5).Position(3)/2) ypos_sc2(2)+scroll_y_offset ax(5).Position(3)/2 scroll_y_size];
 ymin_sc3 = -3;
 ymax_sc3 = 3;
 
@@ -184,7 +188,7 @@ h_sc3 = uicontrol('style','slider', ...
     'value',h.UserData.Uy,'SliderStep', [1/120 , 1/12]);    
 
 % create slider Ux
-ypos_sc4 = [ax(1).Position(1)+(ax(4).Position(3)/2) ypos_sc3(2)+scroll_y_offset ax(4).Position(3)/2 scroll_y_size];
+ypos_sc4 = [ax(1).Position(1)+(ax(5).Position(3)/2) ypos_sc3(2)+scroll_y_offset ax(5).Position(3)/2 scroll_y_size];
 ymin_sc4 = -3;
 ymax_sc4 = 3;
 
@@ -193,6 +197,16 @@ h_sc4 = uicontrol('style','slider', ...
     'units','normalized','position',ypos_sc4, ...
     'callback',clbk_sc4,'min',ymin_sc4,'max',ymax_sc4,...
     'value',h.UserData.Ux,'SliderStep', [1/120 , 1/12]);    
+
+% create text buttom to re-do fit
+
+% create slider w_width
+ypos_sc5 = [ax(1).Position(1)+(ax(5).Position(3)/2) ypos_sc4(2)+scroll_y_offset ax(5).Position(3)/2 scroll_y_size];
+
+clbk_sc5 = @fit_recall;
+h_sc5 = uicontrol('style','pushbutton', ...
+    'units','normalized','position',ypos_sc5, ...
+    'callback',clbk_sc5,'String', 'FIT');  
 
 
 %%%%%%%%%%%%%%%%%%
@@ -230,6 +244,32 @@ function selection_sc4(src,event)
     update_spectra_plot(event.Source.Parent);
 end
 
+function fit_recall(src,event)
+     
+    % racalculate fit
+    
+    Spectrum = event.Source.Parent.UserData.Spectrum;
+    fit_param = event.Source.Parent.UserData.fit_param;
+    water_depth = event.Source.Parent.UserData.water_depth;
+    
+    % set filter with to GUI parameters
+    fit_param.w_width_FG = event.Source.Parent.UserData.w_width;
+    fit_param.w_width_SG = event.Source.Parent.UserData.w_width;
+    
+    disp(['Filter width: ' num2str(event.Source.Parent.UserData.w_width) ' [rad/s]']);
+    disp('Starting fit calculation, Wait ... ');
+    
+    out_fit =  fit_Spectrum2dispersionRelation(Spectrum,fit_param,water_depth);
+    disp('Fit calculation finished.');
+    
+    % update user data
+    event.Source.Parent.UserData.out_fit = out_fit;
+    event.Source.Parent.UserData.Ux = out_fit.SG_fit.Ux_fit;
+    event.Source.Parent.UserData.Uy = out_fit.SG_fit.Uy_fit;
+
+    update_spectra_plot(event.Source.Parent);
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Update figure function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -246,6 +286,7 @@ function h = update_spectra_plot(h)
     w_cut_dir = h.UserData.w_cut_dir;
     w_width = h.UserData.w_width;
     ax = h.UserData.ax;
+    out_fit = h.UserData.out_fit;
     
     % cut in projection direction
     Kx_cut = K_cut * sind(w_cut_dir);
@@ -292,8 +333,6 @@ function h = update_spectra_plot(h)
     %%%%%%%%
     % plot
     %%%%%%%%
-    
-    str_manual_current = ['Ux = ' num2str(Ux) ' [m/s]'  '   Uy = ' num2str(Uy) ' [m/s]' '   SNR  = ' num2str(SNR_density) ];
 
     % plot W average spectrum
     axes(ax(1));
@@ -327,15 +366,16 @@ function h = update_spectra_plot(h)
     plot(K_cut_merged,w_DS_merged,'.k');
     % plot(K_cut,w_DS_min,'r');
     % plot(K_cut,w_DS_max,'g');
+    
+    str_manual_current = ['Ux = ' num2str(Ux) ' [m/s]'  '   Uy = ' num2str(Uy) ' [m/s]' '   SNR  = ' num2str(SNR_density) ];
+    
     title({['Dispersion Relation cut ' num2str(w_cut_dir) ' [deg]' ], str_manual_current});
 
     xlim([min(K_cut_2D(:)) max(K_cut_2D(:))]-ox);
     ylim([min(W_cut_2D(:)) max(W_cut_2D(:))]-oy); 
 
-
-
     % plot K W cut filtered spectra
-    axes(ax(4));
+    axes(ax(5));
     hold off;
 
     pcolor(K_cut_2D - ox ,W_cut_2D - oy ,power_cut_dir_masked_log);
@@ -350,6 +390,62 @@ function h = update_spectra_plot(h)
 
     xlim([min(K_cut_2D(:)) max(K_cut_2D(:))]-ox);
     ylim([min(W_cut_2D(:)) max(W_cut_2D(:))]-oy);
+    
+    % plot SNR first Guess
+    axes(ax(3));
+    hold off;
+    offset_x_FG =  (out_fit.FG_fit.Ux_2D(2,1) - out_fit.FG_fit.Ux_2D(1,1))/2;
+    offset_y_FG =  (out_fit.FG_fit.Uy_2D(1,2) - out_fit.FG_fit.Uy_2D(1,1))/2;
+    
+    xlimits_vec = [min(out_fit.FG_fit.Ux_2D(:)) max(out_fit.FG_fit.Ux_2D(:))] - offset_x_FG;
+    ylimits_vec = [min(out_fit.FG_fit.Uy_2D(:)) max(out_fit.FG_fit.Uy_2D(:))] - offset_y_FG;
+    
+    pcolor(out_fit.FG_fit.Ux_2D - offset_x_FG , out_fit.FG_fit.Uy_2D - offset_y_FG , out_fit.FG_fit.SNR_density_2D);
+    shading flat;
+    axis xy equal tight;
+    hold on;
+    plot(out_fit.FG_fit.Ux_fit, out_fit.FG_fit.Uy_fit,'+r','Linewidth',2);
+    plot(Ux, Uy,'+k','Linewidth',2);
+    xlabel('Ux [m/s]');
+    ylabel('Uy [m/s]');
+    cb3 = colorbar;
+    ylabel(cb3,'SNR density')
+    
+    xlim(xlimits_vec);
+    ylim(ylimits_vec);
+    
+    str_U_FG = ['Ux = ' num2str(out_fit.FG_fit.Ux_fit) ' [m/s]'  '   Uy = ' num2str(out_fit.FG_fit.Uy_fit) ' [m/s]'];
+    title({['First guess: ' str_U_FG ],['SNR density = ' num2str(out_fit.FG_fit.SNR_density_max)]});
+    
+    
+    % plot SNR Second Guess
+    axes(ax(6));
+    hold off;
+    offset_x_SG =  (out_fit.SG_fit.Ux_2D(2,1) - out_fit.SG_fit.Ux_2D(1,1))/2;
+    offset_y_SG =  (out_fit.SG_fit.Uy_2D(1,2) - out_fit.SG_fit.Uy_2D(1,1))/2;
+    
+    xlimits_vec = [min(out_fit.SG_fit.Ux_2D(:)) max(out_fit.SG_fit.Ux_2D(:))] - offset_x_SG;
+    ylimits_vec = [min(out_fit.SG_fit.Uy_2D(:)) max(out_fit.SG_fit.Uy_2D(:))] - offset_y_SG;
+    
+    pcolor(out_fit.SG_fit.Ux_2D - offset_x_SG , out_fit.SG_fit.Uy_2D - offset_y_SG , out_fit.SG_fit.SNR_density_2D);
+    shading flat;
+    axis xy equal tight;
+    hold on;
+    plot(out_fit.SG_fit.Ux_fit, out_fit.SG_fit.Uy_fit,'+r','Linewidth',2);
+    plot(Ux, Uy,'+k','Linewidth',2);
+    xlabel('Ux [m/s]');
+    ylabel('Uy [m/s]');
+    cb3 = colorbar;
+    ylabel(cb3,'SNR density')
+    
+    xlim(xlimits_vec);
+    ylim(ylimits_vec);
+    
+    str_U_SG = ['Ux = ' num2str(out_fit.SG_fit.Ux_fit) ' [m/s]'  '   Uy = ' num2str(out_fit.SG_fit.Uy_fit) ' [m/s]'];
+    title({['Second guess: ' str_U_SG ],['SNR density = ' num2str(out_fit.SG_fit.SNR_density_max)]});
+    
+    
+    % plot SNR second Guess
     
     
     % refresh annotation
