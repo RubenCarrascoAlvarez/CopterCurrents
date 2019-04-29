@@ -12,10 +12,10 @@ function display_fit_guess_v2(IMG_SEQ,STCFIT,n_window,w_cut_dir)
 %       (Ux,Uy) is plotted in a black dotted line. Move the sliders to
 %       check effect in the disperision relation.
 %       4) First Guess SNR density distribution in Ux and Uy axis. Upper
-%       Right window. Press the buttom 'FIT' to recalculate the SNR
+%       Right window. Press the bottom 'FIT' to recalculate the SNR
 %       accorind to the filter width selected in the slider bar.
 %       5) Second Guess SNR density distribution in Ux and Uy axis. Lower
-%       Right window. Press the buttom 'FIT' to recalculate the SNR
+%       Right window. Press the bottom 'FIT' to recalculate the SNR
 %       accorind to the filter width selected in the slider bar.
 %
 %    There is also 4 slider to play around the following paramters
@@ -25,7 +25,7 @@ function display_fit_guess_v2(IMG_SEQ,STCFIT,n_window,w_cut_dir)
 %       displayed in the 2nd and 3rd plot.
 %       - Filter width: Dispersion relation filter width in rad/s.
 %
-%    FIT buttom: Recalculate the current fit plotted in windows 4 and 5,
+%    FIT bottom: Recalculate the current fit plotted in windows 4 and 5,
 %    according to the filter width displayed on the slide bar.
 %
 %   Input:
@@ -245,8 +245,7 @@ h_sc4 = uicontrol('style','slider', ...
     'callback',clbk_sc4,'min',ymin_sc4,'max',ymax_sc4,...
     'value',h.UserData.Ux,'SliderStep', [1/120 , 1/12]);    
 
-% create text buttom to re-do fit
-
+% create text bottom to re-do fit
 % create slider w_width
 ypos_sc5 = [ax(1).Position(1)+(ax(5).Position(3)/2) ypos_sc4(2)+scroll_y_offset ax(5).Position(3)/2 scroll_y_size];
 
