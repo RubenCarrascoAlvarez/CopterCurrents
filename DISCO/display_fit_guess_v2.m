@@ -1,11 +1,54 @@
 function display_fit_guess_v2(IMG_SEQ,STCFIT,n_window,w_cut_dir)
-%   GUI very usefull to check the parameters in STCFIT applied to the data 
-%   IMG_SEQ.
+%   General User Interterface usefull for checking the fit parameters (STCFIT) 
+%   applied in a specific winow from IMG_SEQ. This function display 5 plots:
+%       1) Average of the wave dispersion relation in W axis. Upper left
+%       window.
+%       2) K W cut raw spectra according to 'w_cut_dir' direction. Upper
+%       Center window. The dispersion relation corresponding to the sliders
+%       (Ux,Uy) is plotted in a black dotted line. Move the sliders to
+%       check effect in the disperision relation.
+%       3) K W cut filtered spectra according to 'w_cut_dir' direction. Lower
+%       center window.The dispersion relation corresponding to the sliders
+%       (Ux,Uy) is plotted in a black dotted line. Move the sliders to
+%       check effect in the disperision relation.
+%       4) First Guess SNR density distribution in Ux and Uy axis. Upper
+%       Right window. Press the buttom 'FIT' to recalculate the SNR
+%       accorind to the filter width selected in the slider bar.
+%       5) Second Guess SNR density distribution in Ux and Uy axis. Lower
+%       Right window. Press the buttom 'FIT' to recalculate the SNR
+%       accorind to the filter width selected in the slider bar.
+%
+%    There is also 4 slider to play around the following paramters
+%       - Ux: current speed in X direction [m/s].
+%       - Uy: current speed in Y direction [m/s].
+%       - Frequency cut direction: Direction in degres o the K W cut,
+%       displayed in the 2nd and 3rd plot.
+%       - Filter width: Dispersion relation filter width in rad/s.
+%
+%    FIT buttom: Recalculate the current fit plotted in windows 4 and 5,
+%    according to the filter width displayed on the slide bar.
 %
 %   Input:
-%       IMG_SEQ:
+%     IMG_SEQ: Structure defining the Image sequence in Real World
+%     coordeninates.
+%       IMG_SEQ.IMG: 3D Intensty data (Nx,Ny,Nt)
+%       IMG_SEQ.gridX: 2D grid X data in meters (Nx,Ny)
+%       IMG_SEQ.gridY: 2D grid Y data in meters (Nx,Ny)
+%       IMG_SEQ.dx: X resolution in meters.
+%       IMG_SEQ.dy: Y resolution in meters.
+%       IMG_SEQ.dt: time resolution in seconds.
+%       IMG_SEQ.ts_video: video time stamps in datenum format. 1xNt vector.
+%       IMG_SEQ.altitude: altitude to the water surface in meters.
+%                       altitude  = video altitude + offset_home2water_Z
+%       IMG_SEQ.pitch: video pitch (for Nadir pitch = -90)
+%       IMG_SEQ.roll: video roll (for Nadir roll = 0)
+%       IMG_SEQ.heading: video heading to North (yaw)
+%       IMG_SEQ.Longitude: video longitude in degrees
+%       IMG_SEQ.Latitude: video latitude in degrees
+%       IMG_SEQ.mediainfo_string: raw mediainfo string
+%       IMG_SEQ.Georeference_Struct_config: Georeference_Struct used
 %
-%       STCFIT: Structure defining the current fit input parameters
+%     STCFIT: Structure defining the current fit input parameters
 %
 %         STCFIT.Generic.gridX: 2D X grid (Horizontal) in meters
 %         STCFIT.Generic.gridY: 2D Y grid (Vertical) in meters 
@@ -34,6 +77,10 @@ function display_fit_guess_v2(IMG_SEQ,STCFIT,n_window,w_cut_dir)
 %         STCFIT.fit_param.wavePeriod_limits_sec: [min max] wave Period to use [seconds]
 %         STCFIT.fit_param.K_limits: [min max] wave number to use [rad/m]
 %         STCFIT.fit_param.W_limits: [min max] wave frequency to use [rad/sec]
+%
+%       n_window: Number of the window to be analyzed.
+%       w_cut_dir: Direction in degres of the K and W cut,
+%       displayed in the 2nd and 3rd plot.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
