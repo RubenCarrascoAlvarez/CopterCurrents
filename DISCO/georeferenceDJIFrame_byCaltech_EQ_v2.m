@@ -215,12 +215,12 @@ conv_monotonic_grid_ST =  struct('LinearInd_grid',LinearInd_grid,...
     size_original_image,'dxdy',dxdy);
 
 
-% plot
-figure;
-pcolor(grid_X_RW_2d ,grid_Y_RW_2d,img_monotonic_grid);
-shading flat;
-axis xy equal tight;
-colormap(gray);
+% % plot
+% figure;
+% pcolor(grid_X_RW_2d ,grid_Y_RW_2d,img_monotonic_grid);
+% shading flat;
+% axis xy equal tight;
+% colormap(gray);
 
 
 end
