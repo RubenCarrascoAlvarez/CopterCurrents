@@ -155,7 +155,8 @@ grid_X_RW_1d = X_lim(1)*offsetRatio : dxdy : X_lim(2)*offsetRatio;
 
 
 % create equidistant and monotonic grid matrix
-[grid_X_RW_2d ,grid_Y_RW_2d ] = meshgrid(grid_X_RW_1d ,grid_Y_RW_1d);
+% [grid_X_RW_2d ,grid_Y_RW_2d ] = meshgrid(grid_X_RW_1d ,grid_Y_RW_1d);
+[grid_X_RW_2d ,grid_Y_RW_2d ] = ndgrid(grid_X_RW_1d ,grid_Y_RW_1d);
 
 
 % create inputs
@@ -169,7 +170,7 @@ X = cat(2,grid_X_RW_2d(:),grid_Y_RW_2d(:),ones(numel(grid_X_RW_2d),1)*altitude)'
 % [xp,dxpdom,dxpdT,dxpdf,dxpdc,dxpdk] = project_points(X,om,T,f,c,k)
 % [xp] = project_points(X,om,T,DISCO_CamCalib.fc,DISCO_CamCalib.cc,DISCO_CamCalib.kc);
 
-% reshape
+% reshape (X,Y)
 pixels_2D_X =  reshape(xp(1,:),size(grid_X_RW_2d)); % 
 pixels_2D_Y  = reshape(xp(2,:),size(grid_X_RW_2d));
 
@@ -185,6 +186,7 @@ pixels_2D_Y(pixels_2D_Y<1 | pixels_2D_Y >DISCO_CamCalib.ny) = NaN;
 pixels_2D_Y = flipud(pixels_2D_Y);
 
 % get linear index corresponding to the orinal image
+% LinearInd_img = sub2ind(size(img),pixels_2D_Y(:),pixels_2D_X(:));
 LinearInd_img = sub2ind(size(img),pixels_2D_Y(:),pixels_2D_X(:));
 
 % get linear index corresponded to the new grids [grid_d1_RW_2d,grid_d2_RW_2d]
@@ -212,12 +214,12 @@ conv_monotonic_grid_ST =  struct('LinearInd_grid',LinearInd_grid,...
     size_original_image,'dxdy',dxdy);
 
 
-% % plot
-% figure;
-% pcolor(grid_X_RW_2d ,grid_Y_RW_2d,img_monotonic_grid);
-% shading flat;
-% axis xy equal tight;
-% colormap(gray);
+% plot
+figure;
+pcolor(grid_X_RW_2d ,grid_Y_RW_2d,img_monotonic_grid);
+shading flat;
+axis xy equal tight;
+colormap(gray);
 
 
 end
