@@ -117,6 +117,9 @@ for i1 = 1:length(Georeference_Struct_config.video_ts)
     % save image
     % flip Y axis + permute dim1 and dim2
     IMG_SEQ.IMG(:,:,i1) = permute(flipud(img_gray),[2 1]);
+    
+    % figure; pcolor(IMG_SEQ.gridX,IMG_SEQ.gridY,IMG_SEQ.IMG(:,:,i1)); 
+    % shading flat; axis xy equal tight;
 
 end
 
