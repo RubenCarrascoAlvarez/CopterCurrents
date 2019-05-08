@@ -99,26 +99,31 @@ end
 %            0                            0                                           1];
 
 % Rotation vector
-om = deg2rad([0 0 pitch]);
+% https://developer.dji.com/mobile-sdk/documentation/introduction/flightController_concepts.html
+% Roll => X
+% Pitch => Y
+% Yaw => Z
+om = deg2rad([roll pitch 0]);
+% om = deg2rad([0 0 pitch]);
 if roll ~= 0
    warning('georeferenceDJIFrame_byCaltech_v2: expect roll = 0.') 
 end
 
 % get Translation vector
-T = [0; 0 ; altitude];
-% T = [0; 0 ; - altitude];
+% T = [0; 0 ; altitude];
+T = [0; 0 ; 0];
 
 % note: X and Y are exchange to match with IMG sequence notation. 
 % (X => horizontal)
 % (Y => vertical)
-% point coordenates [Y X 1] => project_points3
-% get X limits 
+% point coordenates [X Y Z] => project_points3
 
+% get X limits 
 RatAlt = 1;
 X_lim = [NaN NaN];
 while(any(isnan(X_lim)))
-    vec = -RatAlt*altitude: altitude/100:RatAlt*altitude; % crate vector [0 X 1];
-    X = cat(2,zeros(numel(vec),1),vec(:),ones(numel(vec),1))';
+    vec = -RatAlt*altitude: altitude/1000:RatAlt*altitude; % create vector [X 0 altitude];
+    X = cat(2,vec(:),zeros(numel(vec),1),repmat(altitude,[numel(vec) 1]))';
     [xp] = project_points3(X,om,T,DISCO_CamCalib.fc,DISCO_CamCalib.cc,DISCO_CamCalib.kc,DISCO_CamCalib.alpha_c);
     % value of Y where the pixel coordenate is 1
     % note: X is conected with the dim1 of xp
@@ -128,13 +133,13 @@ end
 X_lim = sort(X_lim);
 
 
-% point coordenates [Y X 1] => project_points3
+% point coordenates [X Y Z] => project_points3
 % get Y limits 
 RatAlt = 1;
 Y_lim = [NaN NaN];
 while(any(isnan(Y_lim)))
-    vec = -RatAlt*altitude: altitude/10000 :RatAlt*altitude; % crate vector [Y 0 1];
-    Y = cat(2,vec(:),zeros(numel(vec),1),ones(numel(vec),1))';
+    vec = -RatAlt*altitude: altitude/1000 :RatAlt*altitude; % crate vector [0 Y altitude];
+    Y = cat(2,zeros(numel(vec),1),vec(:),repmat(altitude,[numel(vec) 1]))';
     [xp] = project_points3(Y,om,T,DISCO_CamCalib.fc,DISCO_CamCalib.cc,DISCO_CamCalib.kc,DISCO_CamCalib.alpha_c);
     % value of Y where the pixel coordenate is 1
     % note: Y is conected with the dim2 of xp
@@ -147,15 +152,14 @@ offsetRatio = 1.0;
 grid_Y_RW_1d = linspace(Y_lim(1)*offsetRatio ,Y_lim(2)*offsetRatio ,DISCO_CamCalib.ny);
 dxdy = grid_Y_RW_1d(2) - grid_Y_RW_1d(1);
 grid_X_RW_1d = X_lim(1)*offsetRatio : dxdy : X_lim(2)*offsetRatio;
-% grid_Y_RW_1d = linspace(Y_lim(1),Y_lim(2),DISCO_CamCalib.ny);
-% dxdy = grid_Y_RW_1d(2) - grid_Y_RW_1d(1);
-% grid_X_RW_1d = min(X_lim(1)) : dxdy : max(X_lim(2));
+
 
 % create equidistant and monotonic grid matrix
-[grid_X_RW_2d ,grid_Y_RW_2d ] = ndgrid(grid_X_RW_1d ,grid_Y_RW_1d);
+[grid_X_RW_2d ,grid_Y_RW_2d ] = meshgrid(grid_X_RW_1d ,grid_Y_RW_1d);
+
 
 % create inputs
-X = cat(2,grid_Y_RW_2d(:),grid_X_RW_2d(:),ones(numel(grid_X_RW_2d),1))';
+X = cat(2,grid_X_RW_2d(:),grid_Y_RW_2d(:),ones(numel(grid_X_RW_2d),1)*altitude)';
 
 % use caltech funcion (v2) project_points2 x y coordenates to pixels
 %  [xp,dxpdom,dxpdT,dxpdf,dxpdc,dxpdk] = project_points2(X,om,T,f,c,k,alpha)
@@ -166,23 +170,26 @@ X = cat(2,grid_Y_RW_2d(:),grid_X_RW_2d(:),ones(numel(grid_X_RW_2d),1))';
 % [xp] = project_points(X,om,T,DISCO_CamCalib.fc,DISCO_CamCalib.cc,DISCO_CamCalib.kc);
 
 % reshape
-pixels_2D_X =  reshape(xp(2,:),size(grid_X_RW_2d)); % 
-pixels_2D_Y  = reshape(xp(1,:),size(grid_X_RW_2d));
+pixels_2D_X =  reshape(xp(1,:),size(grid_X_RW_2d)); % 
+pixels_2D_Y  = reshape(xp(2,:),size(grid_X_RW_2d));
 
 % get nearest pixels
 pixels_2D_X = round(pixels_2D_X)+1;
 pixels_2D_Y = round(pixels_2D_Y)+1;
 
 %  set to nan boundaries out of 'img'
-pixels_2D_X(pixels_2D_X<1 | pixels_2D_X >DISCO_CamCalib.ny) = NaN;
-pixels_2D_Y(pixels_2D_Y<1 | pixels_2D_Y >DISCO_CamCalib.nx) = NaN;
+pixels_2D_X(pixels_2D_X<1 | pixels_2D_X >DISCO_CamCalib.nx) = NaN;
+pixels_2D_Y(pixels_2D_Y<1 | pixels_2D_Y >DISCO_CamCalib.ny) = NaN;
+
+% flip Y axis (due to the image is fliped by video reader)
+pixels_2D_Y = flipud(pixels_2D_Y);
 
 % get linear index corresponding to the orinal image
-LinearInd_img = sub2ind(size(img),pixels_2D_X(:),pixels_2D_Y(:));
+LinearInd_img = sub2ind(size(img),pixels_2D_Y(:),pixels_2D_X(:));
 
 % get linear index corresponded to the new grids [grid_d1_RW_2d,grid_d2_RW_2d]
-[grid_X_RW_2d_pix,grid_Y_RW_2d_pix] = ndgrid(1:length(grid_X_RW_1d),1:length(grid_Y_RW_1d));
-LinearInd_grid = sub2ind(size(grid_X_RW_2d_pix),grid_X_RW_2d_pix(:),grid_Y_RW_2d_pix(:));
+[grid_X_RW_2d_pix,grid_Y_RW_2d_pix] = meshgrid(1:length(grid_X_RW_1d),1:length(grid_Y_RW_1d));
+LinearInd_grid = sub2ind(size(grid_X_RW_2d_pix),grid_Y_RW_2d_pix(:),grid_X_RW_2d_pix(:));
 
 
 % keep only valid index 
