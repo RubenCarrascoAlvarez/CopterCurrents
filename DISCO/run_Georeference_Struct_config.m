@@ -71,6 +71,12 @@ function [IMG_SEQ] = run_Georeference_Struct_config(Georeference_Struct_config)
 % get metadata from video
 [LON_drone,LAT_drone,Height_drone,timestamp_video, mediainfo_string,heading,pitch,roll] = get_mediainfo_information(Georeference_Struct_config.video_fname);
 
+% Shift pitch 90 degress  
+% The pitch value for Nadir position must be 0 and 90 in the horizon. 
+% But DJI drone camera pitch is set the 0 position the horizon and -90 in Nadir.
+% The camera pith is shifted 90 degres.
+pitch = pitch + 90;
+
 % check DISCO_CamCalib type
 [GeoMode] = getGeoMode_from_DISCO_CamCalib(Georeference_Struct_config.DISCO_CamCalib);
 
