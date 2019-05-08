@@ -183,7 +183,8 @@ pixels_2D_X(pixels_2D_X<1 | pixels_2D_X >DISCO_CamCalib.nx) = NaN;
 pixels_2D_Y(pixels_2D_Y<1 | pixels_2D_Y >DISCO_CamCalib.ny) = NaN;
 
 % flip Y axis (due to the image is fliped by video reader)
-pixels_2D_Y = flipud(pixels_2D_Y);
+% pixels_2D_Y = flipud(pixels_2D_Y);
+pixels_2D_Y = fliplr(pixels_2D_Y);
 
 % get linear index corresponding to the orinal image
 % LinearInd_img = sub2ind(size(img),pixels_2D_Y(:),pixels_2D_X(:));
@@ -214,12 +215,12 @@ conv_monotonic_grid_ST =  struct('LinearInd_grid',LinearInd_grid,...
     size_original_image,'dxdy',dxdy);
 
 
-% % plot
-% figure;
-% pcolor(grid_X_RW_2d ,grid_Y_RW_2d,img_monotonic_grid);
-% shading flat;
-% axis xy equal tight;
-% colormap(gray);
+% plot
+figure;
+pcolor(grid_X_RW_2d ,grid_Y_RW_2d,img_monotonic_grid);
+shading flat;
+axis xy equal tight;
+colormap(gray);
 
 
 end
