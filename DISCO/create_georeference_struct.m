@@ -97,8 +97,8 @@ end
 
 % check time_limits(2)
 % max_duration_limit = v.Duration;
-% max_duration_limit = v.Duration - (1/v.FrameRate);
-max_duration_limit = v.Duration - (2/(v.FrameRate));
+max_duration_limit = v.Duration - (1/v.FrameRate);
+% max_duration_limit = v.Duration - (2/(v.FrameRate));
 if time_limits(2) > max_duration_limit
     time_limits(2) = max_duration_limit;
     warning('create_georeference_struct: time_limits(2) > Video duration');
