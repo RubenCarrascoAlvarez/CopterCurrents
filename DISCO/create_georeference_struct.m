@@ -88,6 +88,23 @@ if ~isempty(video_fname)
     end
 end
 
+% check time_limits(1)
+if time_limits(1) < 0
+    time_limits(1) = 0;
+    warning('create_georeference_struct: time_limits(1) < 0');
+    disp('time_limits(1) set to 0 seconds');
+end
+
+% check time_limits(2)
+% max_duration_limit = v.Duration;
+% max_duration_limit = v.Duration - (1/v.FrameRate);
+max_duration_limit = v.Duration - (1/(v.FrameRate-1));
+if time_limits(2) > max_duration_limit
+    time_limits(2) = max_duration_limit;
+    warning('create_georeference_struct: time_limits(2) > Video duration');
+    disp(['time_limits(2) set to ' num2str(max_duration_limit) ' seconds.']);
+end
+
 % load calibration data
 if isfile(DISCO_calibration_filename)
     load(DISCO_calibration_filename,'DISCO_CamCalib');
