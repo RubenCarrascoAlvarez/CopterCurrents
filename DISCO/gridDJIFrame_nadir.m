@@ -1,5 +1,5 @@
 function [X,Y,IMG] = gridDJIFrame_nadir(img,altitude,config_str)
-% Retrieve X and Y 2D coordenates using the FOV method.
+% Retrieve X and Y 2D coordenates using the FOV method, from DJI video.
 %   Note: the video must be recorded in Nadir postion, camera perpedicular
 %   to the water surface.
 %     
@@ -20,12 +20,14 @@ function [X,Y,IMG] = gridDJIFrame_nadir(img,altitude,config_str)
 %           camera_fov_param.camera_offset_Z = vertical (Z) distance in meters; 
 %
 %   Output:
-%     X: 2D matrix (Ny,Nx) containing the distance in meters to camerara 
-%        center in horizontal direction (x direction).
-%     Y: 2D matrix (Ny,Nx) containing the distance in meters to camerara 
-%        center in vertical direction (Y direction).
+%     X: 2D matrix (Ny,Nx) containing the distance in meters to camera 
+%        center in horizontal direction (x direction). Grid monotonic
+%        ascending.
+%     Y: 2D matrix (Ny,Nx) containing the distance in meters to camera 
+%        center in vertical direction (Y direction). Grid monotonic
+%        descending.
 %     IMG: 2D Intensity image (Ny,Nx). 
-%          Note: 'IMG' is 'img' fliped in Y direction. 
+%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -103,13 +105,10 @@ altitude_after_offset =  (altitude + camera_fov_param.camera_offset_Z);
 % altitude_after_offset = -(altitude + camera_fov_param.camera_offset_Z);
 
 x_vec =  linspace(altitude_after_offset*tand(-camera_fov_param.fov_x/2),altitude_after_offset*tand(camera_fov_param.fov_x/2),size_X);
-% y_vec =  linspace(altitude_after_offset*tand(camera_fov_param.fov_y/2),altitude_after_offset*tand(-camera_fov_param.fov_y/2),size_Y);
-y_vec =  linspace(altitude_after_offset*tand(-camera_fov_param.fov_y/2),altitude_after_offset*tand(camera_fov_param.fov_y/2),size_Y);
+y_vec =  linspace(altitude_after_offset*tand( camera_fov_param.fov_y/2),altitude_after_offset*tand(-camera_fov_param.fov_y/2),size_Y);
+% y_vec =  linspace(altitude_after_offset*tand(-camera_fov_param.fov_y/2),altitude_after_offset*tand(camera_fov_param.fov_y/2),size_Y);
 
 [X,Y] = meshgrid(x_vec,y_vec);
-
-% img must be fliped in Y direction to generate a monotonic and ascending
-% grid.
-IMG = flipud(img);
+IMG = img;
 
 end

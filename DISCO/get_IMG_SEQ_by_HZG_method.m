@@ -89,17 +89,18 @@ for i1 = 1:length(Georeference_Struct_config.video_ts)
     img_gray = rgb2gray(img_RGB);
 
     if isempty(IMG_SEQ)
-        % get grid
+        % get grid according DJI data
         [X_eq,Y_eq] = gridDJIFrame_nadir(img_gray,altitude,Georeference_Struct_config.DISCO_CamCalib);
-        % note: [X_eq,Y_eq] must be permuted to follow the IMG_SEQ
-        % dimension requerimet: monotonic, ascending and (Nx,Ny,Nt)
         
+        % get grid in IMG_SEQ format: monotonic and ascending grid, with X
+        % coordenate in first dimension, and Y coordinate in second dimension.
+        X_eq = DJIFrame_to_IMG_SEQ_format(X_eq);
+        Y_eq = DJIFrame_to_IMG_SEQ_format(Y_eq);
 
         % create structure
-        % IMG_SEQ.IMG = nan(size(X_eq,2),size(X_eq,1),length(Georeference_Struct_config.video_ts));
-        IMG_SEQ.IMG = zeros(size(X_eq,2),size(X_eq,1),length(Georeference_Struct_config.video_ts),class(img_gray));
-        IMG_SEQ.gridX = permute(X_eq,[2 1]);
-        IMG_SEQ.gridY = permute(Y_eq,[2 1]);
+        IMG_SEQ.IMG = zeros(size(X_eq,1),size(X_eq,2),length(Georeference_Struct_config.video_ts),class(img_gray));
+        IMG_SEQ.gridX = X_eq;
+        IMG_SEQ.gridY = Y_eq;
         IMG_SEQ.dt = Georeference_Struct_config.dt;
         IMG_SEQ.dx = IMG_SEQ.gridX(2,1) - IMG_SEQ.gridX(1,1);
         IMG_SEQ.dy = IMG_SEQ.gridY(1,2) - IMG_SEQ.gridY(1,1);
@@ -112,11 +113,10 @@ for i1 = 1:length(Georeference_Struct_config.video_ts)
     end
 
     % save image
-    % IMG_SEQ.IMG(:,:,i1) = permute(img_gray,[2 1]);
-    %
-    % save image
     % flip Y axis + permute dim1 and dim2
-    IMG_SEQ.IMG(:,:,i1) = permute(flipud(img_gray),[2 1]);
+    % IMG_SEQ.IMG(:,:,i1) = permute(flipud(img_gray),[2 1]);
+    
+    IMG_SEQ.IMG(:,:,i1) = DJIFrame_to_IMG_SEQ_format(img_gray);
     
     % figure; pcolor(IMG_SEQ.gridX,IMG_SEQ.gridY,IMG_SEQ.IMG(:,:,i1)); 
     % shading flat; axis xy equal tight;
