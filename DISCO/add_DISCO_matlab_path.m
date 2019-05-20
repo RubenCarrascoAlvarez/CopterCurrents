@@ -75,7 +75,7 @@ str_delimited(n_match_found == 0) = [];
 paths2add_str_clean = [DISCO_main_path genpath_char];
 
 for i1 = 1:length(str_delimited) 
-    paths2add_str_clean = [paths2add_str_clean str_delimited{i1} ':'];
+    paths2add_str_clean = [paths2add_str_clean str_delimited{i1} genpath_char];
 end
 
 addpath(paths2add_str_clean);
