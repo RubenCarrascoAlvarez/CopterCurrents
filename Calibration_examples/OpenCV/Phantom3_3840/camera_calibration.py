@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Chessboard clibration for DISCO
+Chessboard clibration for CopterCurrents
 
 Example from:
  https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html
@@ -17,7 +17,7 @@ n_corners_vert = 6 # number of corners in vertical direction
 n_corners_horz = 10 # number of corners in Horizontal direction 
 square_size = 0.105 # square size in meters
 subpixel_search_winSize = 21 # subpixels resoluion
-path2images = '/media/d1/Drone_current_fit/githup/v1/DISCO/Calibration_examples/video/'
+path2images = '/media/d1/Drone_current_fit/githup/CopterCurrents/Calibration_examples/video/'
 
 # images = glob.glob('*.jpg')
 images = glob.glob( path2images + '*.tif')
@@ -71,7 +71,7 @@ cv2.destroyAllWindows()
 # Calibration ( mtx = camera matrix; dist =distortion coeff)
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
-# save Calibration to DISCO_CamCalib format
+# save Calibration to CopterCurrents_CamCalib format
 shape_img = img.shape
 
 fc = np.array([mtx[0][0],mtx[1][1]])
@@ -83,11 +83,11 @@ ny = np.float64(shape_img[0])
 camera_offset_Z = np.float64(0)
 source = 'OpenCV_script'
 
-DISCO_CamCalib = {'fc' : fc, 'cc' : cc, 'kc': kc, 'alpha_c': alpha_c, 'nx' : nx, 'ny' : ny, 'camera_offset_Z': camera_offset_Z, 'source' : source}
+CopterCurrents_CamCalib = {'fc' : fc, 'cc' : cc, 'kc': kc, 'alpha_c': alpha_c, 'nx' : nx, 'ny' : ny, 'camera_offset_Z': camera_offset_Z, 'source' : source}
 
-filename = 'DISCO_CamCalib_' + str(shape_img[1]) + 'x' + str(shape_img[0]) + '.mat'
+filename = 'CopterCurrents_CamCalib_' + str(shape_img[1]) + 'x' + str(shape_img[0]) + '.mat'
 
-sio.savemat(filename, {'DISCO_CamCalib': DISCO_CamCalib})
+sio.savemat(filename, {'CopterCurrents_CamCalib': CopterCurrents_CamCalib})
 
 
 # get mean error (reprojecting)
