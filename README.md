@@ -1,5 +1,4 @@
 # CopterCurrents
-DISpersion relation based Currents Observations
 
                    --------------------------------------------------------
 		   			CopterCurrents
