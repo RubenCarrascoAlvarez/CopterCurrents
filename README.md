@@ -38,7 +38,7 @@ The CopterCurrents signal processing is dividing in 3 steps:
 	in a spectral energy-based maximization technique, in every squared region.
 
 Note: A preliminar version of CopterCurrents was created as DISCO, maybe some part of 
-the documentation or structure names, the DISCO naming remains.
+the documentation or structure names remains as DISCO.
 
 2. LICENSE <br />
 ================
