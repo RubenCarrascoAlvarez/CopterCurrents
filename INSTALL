@@ -1,8 +1,8 @@
------------------------------------------
-Installation instructions for DISC0 v1.00
------------------------------------------
+--------------------------------------------------
+Installation instructions for CopterCurrents v1.00
+--------------------------------------------------
 
-There are some basic steps to building and installing DISCO:
+There are some basic steps to building and installing CopterCurrents:
 
 ----------------
 1.Requierements:
@@ -10,24 +10,24 @@ There are some basic steps to building and installing DISCO:
 
 - MATLAB® (mandatory)
 
-	DISCO is a toolbox designed under MATLAB® enviroment, and requires a MATLAB® 
+	CopterCurrents is a toolbox designed under MATLAB® enviroment, and requires a MATLAB® 
 	software license, which you can obtain by purchasing products or downloading 
 	a product trial. For more information:
 
 	https://www.mathworks.com/help/install/index.html
 
-	DISCO does not requiere any extra MATLAB® toolbox, but the 'Parallel Computing 
+	CopterCurrents does not requiere any extra MATLAB® toolbox, but the 'Parallel Computing 
 	Toolbox' speed up the current fit calculations. The 'Parallel Computing Toolbox' 
 	license is optional, not mandatory.
 
 - Drone video Codecs (mandatory)
 	
-	DISCO reads the drone video frames using the Matlab 'videoreader', which sometimes 
+	CopterCurrents reads the drone video frames using the Matlab 'videoreader', which sometimes 
 	requieres expecific codecs. For more information about the compatible codecs:  
 
 	https://www.mathworks.com/help/matlab/import_export/supported-video-file-formats.html
 
-	Note: Problems were reported during DISCO development, the DJI video codecs 
+	Note: Problems were reported during CopterCurrents development, the DJI video codecs 
 	(MPEG-4, H.264) under linux enviroment were not easy to install. Mathworks suggested 
 	the following work around solution:
 
@@ -36,10 +36,10 @@ There are some basic steps to building and installing DISCO:
 
 - Mediainfo (mandatory)
 
-	DISCO needs mediainfo application to read video metadata information. The video metadata 
+	CopterCurrents needs mediainfo application to read video metadata information. The video metadata 
 	information contains the the drone position (longitude, latitude and altitude), and the
 	camera heading, pitch and roll angles, which are necessary to georeference the video data, 
-	and obtain the real world coordenates. DISCO needs the commad 'mediainfo' accesible in the 
+	and obtain the real world coordenates. CopterCurrents needs the commad 'mediainfo' accesible in the 
 	operating system.
 
 	MediaInfo is available in the following URLs:
@@ -55,7 +55,7 @@ There are some basic steps to building and installing DISCO:
 - External MATLAB® library 'deg2utm' (optional)
 
 	The MATLAB® library 'deg2utm' is an external library used to plot the drone current fits
-	in UTM coordenates. It is not necessary to run DISCO. 
+	in UTM coordenates. It is not necessary to run CopterCurrents. 
 
 	'deg2utm' is available in the mathworks fileexchange repository:
 
@@ -65,15 +65,15 @@ There are some basic steps to building and installing DISCO:
 
 	Installation instructions: After download the file, unzip the content in the following folder:
 
-	../DISCO/external_libraries/deg2utm/
+	../CopterCurrents/external_libraries/deg2utm/
 
 
 - External MATLAB® library 'Camera Calibration Toolbox' (optional)
 	
 	The Caltech 'Camera Calibration Toolbox' for MATLAB® is an external library which allows to 
-	calibrate cameras. This library was also implemented in OpenCV, so adding this library to DISCO
+	calibrate cameras. This library was also implemented in OpenCV, so adding this library to CopterCurrents
 	let us to use OpenCV for camera calibration. The 'Camera Calibration Toolbox' is optional, 
-	DISCO provide his own camera calibration method (FOV calibration). 
+	CopterCurrents provide his own camera calibration method (FOV calibration). 
 
 	Download url: 	http://www.vision.caltech.edu/bouguetj/calib_doc/download/index.html
 	Toolbox manual: http://www.vision.caltech.edu/bouguetj/calib_doc/
@@ -82,22 +82,22 @@ There are some basic steps to building and installing DISCO:
 
 	Installation instructions: After download the file, unzip the content in the following folder:
 
-	../DISCO/external_libraries/TOOLBOX_calib/
+	../CopterCurrents/external_libraries/TOOLBOX_calib/
 
-	A camera calibration by 'Camera Calibration Toolbox' is provided with DISCO: 
+	A camera calibration by 'Camera Calibration Toolbox' is provided with CopterCurrents: 
 	../Calibration_examples/Matlab_Caltech/Phantom3_3840
 
 
 - OpenCV (optional)
 
 	OpenCV is the most spreaded 'Computer vision' open-source platform for Photogrammetry appalications. 
-	Thanks to the 'Camera Calibration Toolbox' DISCO is able to use camera calibrations performed by OpenCV.
+	Thanks to the 'Camera Calibration Toolbox' CopterCurrents is able to use camera calibrations performed by OpenCV.
 	For more information regarding OpenCV:
 
 	https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html
 	https://docs.opencv.org/master/d9/df8/tutorial_root.html
 
-	A camera calibration by 'OpenCV' is provided with DISCO: 
+	A camera calibration by 'OpenCV' is provided with CopterCurrents: 
 	../Calibration_examples/OpenCV/Phantom3_3840
 
 
@@ -115,8 +115,8 @@ There are some basic steps to building and installing DISCO:
 	- External MATLAB® library 'Camera Calibration Toolbox' (optional)
 	- OpenCV (optional)
 
-2) From Matlab enviroment, go to the DISCO folder and run the script 'add_DISCO_matlab_path.m' 
-	to add the DISCO folders to the matlab path.
+2) From Matlab enviroment, go to the CopterCurrents folder and run the script 'add_CopterCurrents_matlab_path.m' 
+	to add the CopterCurrents folders to the matlab path.
 
 	Matlab display the following messages if the external libraies are not available:
 	-----------------------------------------------------------------------------------------------------
@@ -168,8 +168,8 @@ There are some basic steps to building and installing DISCO:
 3.Test :
 ----------------
 
-As final test step, check the DISCO toolbox with your own drone video, go to the 'test_scripts' folder in 
-'/DISCO/test_scripts/' and run the script 'read_Quadcopter_video_script.m'. Edit the line 40 
+As final test step, check the CopterCurrents toolbox with your own drone video, go to the 'test_scripts' folder in 
+'/CopterCurrents/test_scripts/' and run the script 'read_Quadcopter_video_script.m'. Edit the line 40 
 "video_fname = 'path to test video/test_video.MP4';" with your own video filename.
 
 After run the script, a frame will be displayed during 5 seconds, and the metadata video information will 
@@ -185,6 +185,6 @@ be displayed in matlab command line:
 	Camera roll :0 deg
 
 
-Now, DISCO is ready to be used. Read the manual to accomplish the camera calibration (triangle_calibration_FOV_script.m) 
+Now, CopterCurrents is ready to be used. Read the manual to accomplish the camera calibration (triangle_calibration_FOV_script.m) 
 and run a current fit (paper_script_FOV.m).
 
