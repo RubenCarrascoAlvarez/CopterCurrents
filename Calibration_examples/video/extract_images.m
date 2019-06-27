@@ -7,9 +7,9 @@
 %
 % (C) 2019, Ruben Carrasco <ruben.carrasco@hzg.de>
 %
-% This file is part of DISCO
+% This file is part of CopterCurrents
 %
-% DISCO has been developed by Department of Radar Hydrography, at
+% CopterCurrents has been developed by Department of Radar Hydrography, at
 % Helmholtz-Zentrum Geesthacht Centre for Materials and Coastal Research 
 % (Germany), based in the work exposed in: 
 % 
@@ -19,18 +19,18 @@
 % doi: 10.1109/LGRS.2017.2749120
 %
 %
-% DISCO is free software: you can redistribute it and/or modify
+% CopterCurrents is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
 % the Free Software Foundation, either version 3 of the License, or
 % (at your option) any later version.
 %
-% DISCO is distributed in the hope that it will be useful,
+% CopterCurrents is distributed in the hope that it will be useful,
 % but WITHOUT ANY WARRANTY; without even the implied warranty of
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %
 % You should have received a copy of the GNU General Public License
-% along with DISCO.  If not, see <http://www.gnu.org/licenses/>.
+% along with CopterCurrents.  If not, see <http://www.gnu.org/licenses/>.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
