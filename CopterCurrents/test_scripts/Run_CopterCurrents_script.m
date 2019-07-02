@@ -61,7 +61,7 @@ close all;
 
 % video to be analysed
 % video_fname = '/path2thevideo/Drone_video.MP4';
-video_fname = '/media/d1/Drone_current_fit/data/over_the_river/PHANTOM3/20170404/DJI_0002.MP4';
+video_fname = '/media/d1/Drone_current_fit/data/over_the_river/PHANTOM3/Zenodo/20170404_over_Elbe.MP4';
 
 % get video position in DJI drone
 [CamPos_ST] = get_Camera_Position_Struct(video_fname);
