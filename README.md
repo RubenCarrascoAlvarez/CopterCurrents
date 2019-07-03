@@ -36,8 +36,8 @@ The CopterCurrents signal processing is dividing in 3 steps:
 	3) Fit the most probable current, applying the wave dispersion relation 
 	in a spectral energy-based maximization technique, in every squared region.
 
-Note: A preliminar version of CopterCurrents was created as DISCO, maybe some part of 
-the documentation or structure names remains as DISCO.
+Note: A preliminar version of CopterCurrents was created as DISCO, maybe some names
+on the documentation remains as DISCO.
 
 2. LICENSE <br />
 ================
