@@ -95,7 +95,7 @@ else  % use FOV georeference mode
 end
 
 % add lon lat and media info information
-IMG_SEQ.Longitude = Georeference_Struct_config.CamPos_ST.LONGITDE;
+IMG_SEQ.Longitude = Georeference_Struct_config.CamPos_ST.LONGITUDE;
 IMG_SEQ.Latitude = Georeference_Struct_config.CamPos_ST.LATITUDE;
 IMG_SEQ.mediainfo_string = Georeference_Struct_config.CamPos_ST.extra;
 
