@@ -25,6 +25,8 @@ and Remote Sensing Letters, vol. 14, no. 11, pp. 2027-2031, Nov. 2017.
 doi: 10.1109/LGRS.2017.2749120
 URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8049342&isnumber=8082817
 
+https://www.researchgate.net/publication/320029449_Video-Based_Estimation_of_Surface_Currents_Using_a_Low-Cost_Quadcopter
+
 The CopterCurrents signal processing is dividing in 3 steps:
 
 	1) Record a nadir video of the water surface by a  
