@@ -127,7 +127,7 @@ for i1 = 1:length(Georeference_Struct_config.video_ts)
     img_RGB = readFrame(v);
     img_gray = rgb2gray(img_RGB);
     
-    % get not equidisntant grid
+    % conver 'img_gray' to a equidistant grid  (X_eq,Y_eq). The converted image is 'IMG_eq'.
     [X_eq,Y_eq,IMG_eq] = apply_conv_monotonic_grid_ST(conv_monotonic_grid_ST,img_gray,axis_flag);
     % convert to single to save memory
     IMG_eq = single(IMG_eq);
