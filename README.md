@@ -63,14 +63,14 @@ on the documentation remains as DISCO.
 
 CopterCurrents's home page is at:
 
-	https://www.xxxx.hzg/
+	https://hzg.de/coptercurrents/
 
 Please be sure to visit this site for information, documentation,
 tutorials, news, etc.
 
 The latest version of CopterCurrents can be found at:
 
-	https://www.xxxx.hzg/downloads/
+	https://github.com/RubenCarrascoAlvarez/CopterCurrents/releases/tag/1.0.01
 
 
 
