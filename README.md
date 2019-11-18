@@ -58,7 +58,7 @@ on the documentation remains as DISCO.
 
 
 
-3. WEB RESOURCES (TO DO) <br />
+3. WEB RESOURCES <br />
 ================
 
 CopterCurrents's home page is at:
