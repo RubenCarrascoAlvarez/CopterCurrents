@@ -283,7 +283,7 @@ STCFIT = generate_STCFIT_for_NSPP(STCFIT,wavenumbers,include2ndHarmonic,logFlag,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Now extract the Doppler shifts and run the pedm for each spatial window,
 %or a subset of windows.
-windowList = [5,10,11];%[5,10];%Subset of windows to run (set to [] or omit as input below to run over all windows).
+windowList = [5,10];%[5,10];%Subset of windows to run (set to [] or omit as input below to run over all windows).
 
 tic;
 STCFIT = run_current_fit_depth_profile(IMG_SEQ,STCFIT,windowList);
