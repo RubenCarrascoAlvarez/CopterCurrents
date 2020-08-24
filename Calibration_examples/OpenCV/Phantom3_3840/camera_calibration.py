@@ -75,8 +75,10 @@ ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.sh
 shape_img = img.shape
 
 fc = np.array([mtx[0][0],mtx[1][1]])
+fc = fc.transpose()
 cc = np.array([mtx[0][2],mtx[1][2]])
-kc = dist.transpose()
+cc = cc.transpose()
+kc = dist
 alpha_c = mtx[0][1] / mtx[0][0]
 nx = np.float64(shape_img[1])
 ny = np.float64(shape_img[0])
