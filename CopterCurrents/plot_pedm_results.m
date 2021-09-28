@@ -40,7 +40,8 @@ end
 %     hl = legend('$\{u_i,Z_{\mathrm{eff,lin}}(k_i)\}$','PEDM');
 % end
 % set(hl,'Interpreter','latex');
-title('Along-flow');
+% title('Along-flow');
+title('X-direction');
 
 
 
@@ -60,6 +61,7 @@ if exist('U2','var')
     hold off;
 end
 xlabel('[m/s]');
+ylim([min(zvect),0]);
 
 if exist('U2','var')
     hl = legend('$\{u_i,Z_{\mathrm{eff,lin}}(k_i)\}$','PEDM','True Profile');
@@ -68,7 +70,8 @@ else
     hl = legend('$\{u_i,Z_{\mathrm{eff,lin}}(k_i)\}$','PEDM');
 end
 set(hl,'Interpreter','latex');
-title('Cross-flow');
+%title('Cross-flow');
+title('Y-direction');
 
 
 end

@@ -77,8 +77,8 @@ addpath(genpath('C:\Sites\CopterCurrents'));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % video to be analysed
-video_fname = 'F:\media\DJI_0001.mp4';
-%video_fname = 'F:\media\SourceVideo.MP4';
+%video_fname = 'G:\media\DJI_0001.mp4';
+video_fname = 'G:\media\SourceVideo.MP4';
 %video_fname = '/media/d1/Drone_current_fit/data/over_the_river/PHANTOM3/Zenodo/20170404_over_Elbe.MP4';
 
 % get video position in DJI drone
@@ -90,7 +90,7 @@ video_fname = 'F:\media\DJI_0001.mp4';
 %                    'roll',roll,'extra',mediainfo_string);
 
 % time stamps to be used in the video [initial_time  end_time]
-time_limits = [1 60];
+time_limits = [1 5];
 
 % time between frames in seconds
 dt = 0.12;
@@ -117,6 +117,14 @@ CopterCurrents_calibration_filename = 'C:\Sites\CopterCurrents\CopterCurrents\Co
 % corrected
 IMG_SEQ = run_Georeference_Struct_config(Georeference_Struct_config);
 
+%%
+for i = 1%:size(IMG_SEQ.IMG,3)
+    %figure(1);imagesc(IMG_SEQ.IMG(:,:,i));axis image;colorbar;
+    figure(2);imagesc(IMG_SEQ.gridY);axis image;colorbar;
+    drawnow;
+end
+
+
 % save('IMG_SEQ.mat','IMG_SEQ','-v7.3','-nocompression');
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -126,7 +134,7 @@ IMG_SEQ = run_Georeference_Struct_config(Georeference_Struct_config);
 % generate fit structure
 
 % square fit size in meters
-sq_size_m = [50]; 
+sq_size_m = [20]; 
 
 % distance between square fit in meters
 sq_dist_m = [25]; 
@@ -194,7 +202,7 @@ STCFIT = generate_STCFIT_from_IMG_SEQ(IMG_SEQ, sq_size_m, sq_dist_m,mask_2D,nan_
 
 % run current fit in every square
 % tic;
-% STCFIT = run_current_fit(IMG_SEQ,STCFIT);
+STCFIT = run_current_fit(IMG_SEQ,STCFIT);
 % toc;
 
 
@@ -208,21 +216,21 @@ STCFIT = generate_STCFIT_from_IMG_SEQ(IMG_SEQ, sq_size_m, sq_dist_m,mask_2D,nan_
 
 % % filter with SNR
 % % choose going to direction for currents
-% currentdir_flag = 1;
+ currentdir_flag = 1;
 % % set Signal to Noise Ratio threshold 
-% SNR_thr = 0; 
+ SNR_thr = 0; 
 % % set Signal to Noise Ratio density threshold 
-% SNR_density_thr = 3; 
+ SNR_density_thr = 3; 
 % 
 % % retrieve current maps
-% [UTM_currents, Camera_currents] = get_currents_from_STCFIT(STCFIT,SNR_thr,SNR_density_thr,currentdir_flag);
+[UTM_currents, Camera_currents] = get_currents_from_STCFIT(STCFIT,SNR_thr,SNR_density_thr,currentdir_flag);
 % 
 % % plot in camera coordenates
 % % scale factor for arrows
-% arrow_scale = 20; 
+ arrow_scale = 20; 
 % 
 % % plot current maps in camera coordenate system
-% h1  = plot_currents_map(Camera_currents,STCFIT,arrow_scale);
+h1  = plot_currents_map(Camera_currents,STCFIT,arrow_scale);
 % saveas(h1,'Current_map_camera_grid.png')
 % close(h1);
 % 
@@ -283,7 +291,7 @@ STCFIT = generate_STCFIT_for_NSPP(STCFIT,wavenumbers,include2ndHarmonic,logFlag,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Now extract the Doppler shifts and run the pedm for each spatial window,
 %or a subset of windows.
-windowList = [5,10];%[5,10];%Subset of windows to run (set to [] or omit as input below to run over all windows).
+windowList = 6;%[5,10];%[5,10];%Subset of windows to run (set to [] or omit as input below to run over all windows).
 
 tic;
 STCFIT = run_current_fit_depth_profile(IMG_SEQ,STCFIT,windowList);

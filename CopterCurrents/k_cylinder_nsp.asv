@@ -113,14 +113,14 @@ for i = 1:size(omegaiM,1)
         ind2 = (omegaiM(i)-1)*2 +1;%if ind2 > size(WS.Pspec,3);ind2 = 1;end
         %Don't include 2nd harmonic in the case of aliasing (Handling for
         %aliasing could be included in the future)
-        if ind2 < size(Spectrum.power_Spectrum,3);P_ki2 = 10*log10(squeeze(Spectrum.power_Spectrum(:,:,ind2)));else;P_ki2 = 0*P_ki;end
+        if ind2 < size(Spectrum.power_Spectrum,3);P_ki2 = 10*log10(squeeze(Spectrum.power_Spectrum(:,:,ind2)));elseend
     else
         %
         P_ki = (squeeze(Spectrum.power_Spectrum(:,:,omegaiM(i))));
         ind2 = (omegaiM(i)-1)*2 +1;%if ind2 > size(WS.Pspec,3);ind2 = 1;end
         %P_ki2 = (squeeze(WS.Pspec(:,:,ind2)));
         %Same as above w.r.t. aliasing.
-        if ind2 < size(Spectrum.power_Spectrum,3);P_ki2 = (squeeze(Spectrum.power_Spectrum(:,:,ind2)));else;P_ki2 = 0*P_ki;end
+        if ind2 < size(Spectrum.power_Spectrum,3);P_ki2 = (squeeze(Spectrum.power_Spectrum(:,:,ind2)));end
 
     end
     
@@ -129,11 +129,9 @@ for i = 1:size(omegaiM,1)
         P_k2(i,:) = interp2(fftshiftFun(KY),fftshiftFun(KX),fftshiftFun(P_ki2),2*kval*cos(thetaM(1,:)),2*kval*sin(thetaM(1,:)));
     end
     
-%     figure(201);
-%     subplot(1,2,1);imagesc(P_ki);axis image;colorbar;
-%     subplot(1,2,2);imagesc(P_k);colorbar;
-%     drawnow;
-%     pause;
+    figure(201);
+    subplot(1,2,1);imagesc(P_ki);axis image;colorbar;
+    subplot(1,2,2);imagesc(P_k);axis image;colorbar,
 end
 
 

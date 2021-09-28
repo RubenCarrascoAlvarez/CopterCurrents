@@ -1,4 +1,4 @@
-function out_fit = get_doppler_shift_velocities(Spectrum,fit_param,Properties)
+function out_fit = get_doppler_shift_velocities_nsp(Spectrum,fit_param,Properties,verboseFig)
 
 
 %This function extracts Doppler shift velocities representing the
@@ -70,6 +70,11 @@ function out_fit = get_doppler_shift_velocities(Spectrum,fit_param,Properties)
 %Parse inputs, set defaults if needed.
 
 
+if ~exist('verboseFig','var')
+    verboseFig = 0;
+end
+
+
 if ~isfield(fit_param,'include2ndHarmonic')
    fit_param.include2ndHarmonic = 0; 
 end
@@ -114,87 +119,63 @@ T = Properties.T;
 omegaWidthFun = fit_param.omegaWidthFun;
 wavenumbers = fit_param.wavenumbers;
 
+%First, come up with an initial guess, based on the current over all
+%wavenumbers.
+
+% P = struct('h',h,'g',g,'T',T,'omegaWidth',omegaWidthFun(mean(wavenumbers)),'kWidth',0.05);
+% 
+% %Evaluate the NSP on grid of points to avoid other local maxima
+% snrG = zeros(size(fit_param.Ux_2D));
+% for i = 1:size(fit_param.Ux_2D,1)
+%     for j = 1:size(fit_param.Ux_2D,2)
+%         [snr_ij,~,~] = nsp_doppler_shift_extraction(Spectrum,P,NaN,fit_param.Ux_2D(i,j),fit_param.Uy_2D(i,j));
+%         snrG(i,j) = snr_ij;
+%     end
+% end
+% [~,im] = max(snrG(:));
+% 
+% figure(1002);
+% %subplot(1,3,1);
+% imagesc(fit_param.Uy_2D(1,:),fit_param.Ux_2D(:,1),snrG);colorbar;axis image;
+% xlabel('U_y [m/s]');ylabel('U_x [m/s]');%title(sprintf('SNR: k = %.3f rad/m',wavenumbers(jj)));
+% drawnow;
+% 
+% cDoppGuess = [fit_param.Ux_2D(im),fit_param.Uy_2D(im)]
 
 for jj = 1:numel(fit_param.wavenumbers)
-    %Re-create and update Properties structure (to work with parfor)
-    P = struct('h',h,'g',g,'T',T,'omegaWidth',omegaWidthFun(wavenumbers(jj)));
-    %Properties.omegaWidth = fit_param.omegaWidthFun(fit_param.wavenumbers(jj));
-    %[~,Scyl,~] = k_cylinder_nsp(Spectrum,Properties,fit_param.wavenumbers(jj),0,0,[],fit_param.include2ndHarmonic,fit_param.logFlag);
-    [~,Scyl,~] = k_cylinder_nsp(Spectrum,P,wavenumbers(jj),0,0,[],fit_param.include2ndHarmonic,fit_param.logFlag);%parfor version
-    
-    kjv = linspace(wavenumbers(jj)-0.05,wavenumbers(jj)+0.05,11);
-    Scyl.P_k = 0;
-    for ik = 1:numel(kjv)
-        [~,Scyl0,~] = k_cylinder_nsp(Spectrum,P,kjv(ik),0,0,[],fit_param.include2ndHarmonic,fit_param.logFlag);%parfor version
-        Scyl.P_k = Scyl.P_k + Scyl0.P_k;
-        figure(202);imagesc(Scyl.P_k);colorbar;drawnow;
+  
+P = struct('h',h,'g',g,'T',T,'omegaWidth',omegaWidthFun(wavenumbers(jj)),'kWidth',fit_param.kWidth);
+
+snrG = zeros(size(fit_param.Ux_2D));
+for i = 1:size(fit_param.Ux_2D,1)
+    for j = 1:size(fit_param.Ux_2D,2)
+        [snr_ij,~,~] = nsp_doppler_shift_extraction(Spectrum,P,wavenumbers(jj),fit_param.Ux_2D(i,j),fit_param.Uy_2D(i,j));
+        snrG(i,j) = snr_ij;
     end
-        
-        %Evaluate the NSP on grid of points to avoid other local maxima
-    snrG = zeros(size(fit_param.Ux_2D));
-    for i = 1:size(fit_param.Ux_2D,1)
-        for j = 1:size(fit_param.Ux_2D,2)
-            [snr_ij,~,~] = k_cylinder_nsp(Spectrum,P,fit_param.wavenumbers(jj),fit_param.Ux_2D(i,j),fit_param.Uy_2D(i,j),Scyl,fit_param.include2ndHarmonic,fit_param.logFlag);
-            snrG(i,j) = snr_ij;
-        end
-    end
-    [~,im] = max(snrG(:));
+end
+[~,im] = max(snrG(:));
 
-    %[Imax,Jmax] = ind2sub(size(snrG),im);
-    %%
-    
-     figure(1002);
-     subplot(1,3,1);
-     imagesc(fit_param.Uy_2D(1,:),fit_param.Ux_2D(:,1),snrG);colorbar;axis image;
-     xlabel('U_y [m/s]');ylabel('U_x [m/s]');title(sprintf('SNR: k = %.3f rad/m',wavenumbers(jj)));
-     drawnow;
+if verboseFig
+figure(1002);
+%subplot(1,3,1);
+imagesc(fit_param.Uy_2D(1,:),fit_param.Ux_2D(:,1),snrG);colorbar;axis image;
+xlabel('U_y [m/s]');ylabel('U_x [m/s]');title(sprintf('SNR: k = %.3f rad/m',wavenumbers(jj)));
+drawnow;
+end
 
-    
-    cDoppGuess = [fit_param.Ux_2D(im),fit_param.Uy_2D(im)];
-        
-Ufit = fminsearch(@(U) 1-k_cylinder_nsp(Spectrum,P,wavenumbers(jj),U(1),U(2),Scyl,fit_param.include2ndHarmonic,fit_param.logFlag),cDoppGuess);
+cDoppGuess = [fit_param.Ux_2D(im),fit_param.Uy_2D(im)];
 
-%%
+Ufit = fminsearch(@(U) 1-nsp_doppler_shift_extraction(Spectrum,P,wavenumbers(jj),U(1),U(2)),cDoppGuess);
 
-%Define wave dispersion relation.
-omegaFun_kth = @(k,theta) sqrt((g*k + T*k.^3).*tanh(k*h)) + 0*Ufit(1)*cos(theta).*k + 0*Ufit(2)*sin(theta).*k;
-%tic;
-[SNR_fit,SpecCylinderCS,G] = k_cylinder_nsp(Spectrum,P,wavenumbers(jj),Ufit(1),Ufit(2),Scyl,fit_param.include2ndHarmonic,fit_param.logFlag);
-%toc;
-figure(1002);subplot(1,3,2);imagesc(...
-    SpecCylinderCS.thetaM(1,:),...
-    SpecCylinderCS.omegaM(:,1),...
-    log10(SpecCylinderCS.P_k));colorbar;set(gca,'YDir','normal');drawnow;
-hold on;
-plot(SpecCylinderCS.thetaM(1,:),omegaFun_kth(wavenumbers(jj),SpecCylinderCS.thetaM(1,:)),'--w');
-hold off;
+[SNR_fit,P_k,G] = nsp_doppler_shift_extraction(Spectrum,P,wavenumbers(jj),Ufit(1),Ufit(2));
 
-figure(1002);subplot(1,3,3);imagesc(...
-    SpecCylinderCS.thetaM(1,:),...
-    SpecCylinderCS.omegaM(:,1),...
-    G);colorbar;set(gca,'YDir','normal');drawnow;
-
-% %Update outputs.
-% out_fit.Ux(jj) = Ufit(1);
-% out_fit.Uy(jj) = Ufit(2);
-% out_fit.SNR_max(jj) = SNR_fit;
-% out_fit.verbose(jj).k = fit_param.wavenumbers(jj);
-% out_fit.verbose(jj).SNR_2D = snrG;
-% out_fit.verbose(jj).Peaks_2D = find_peaks(snrG);
-
-%Update outputs. (parfor)
 Ux(jj) = Ufit(1);
 Uy(jj) = Ufit(2);
 SNR_max(jj) = SNR_fit;
 
 
 verbose(jj) = struct('k',fit_param.wavenumbers(jj),'SNR_2D',snrG,'Peaks_2D',find_peaks(snrG));
-%figure(1001);imagesc(
-%verbose(jj).k = fit_param.wavenumbers(jj);
-%verbose(jj).SNR_2D = snrG;
-%verbose(jj).Peaks_2D = find_peaks(snrG);
 
-    
 end
 
 

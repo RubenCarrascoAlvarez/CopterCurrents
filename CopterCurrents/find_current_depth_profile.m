@@ -100,7 +100,8 @@ wavenumbers = wavenumbers(inds);
 
 U0 = mean(Ux(inds));
 V0 = mean(Uy(inds));
-phi = atan2(V0,U0);
+%phi = atan2(V0,U0);
+phi = 0;
 
 U1 = Ux(inds)*cos(-phi) - Uy(inds)*sin(-phi);
 U2 = Ux(inds)*sin(-phi) + Uy(inds)*cos(-phi);
@@ -109,6 +110,8 @@ out.global.wavenumbers = wavenumbers;
 out.global.U1 = U1;
 out.global.U2 = U2;
 out.global.phi = phi;
+out.global.Ux = Ux(inds);
+out.global.Uy = Uy(inds);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %EDM%

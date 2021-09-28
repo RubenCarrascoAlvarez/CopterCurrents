@@ -98,7 +98,7 @@ Z_eff = -(2*k_vect).^-1.*tanh(abs(waterDepth)*k_vect);
 %Set default values for PEDM parameter combinations if inputs left blank
 if isempty(nMax_vals)
     nm = min(12,round(numel(k_vect)/2));
-    nMax_vals = (0:nm);
+    nMax_vals = 1;%(0:nm);
 end
 if isempty(deltaz_T_vals)
     depthRange = abs(Z_eff(1)-Z_eff(end));
@@ -201,16 +201,14 @@ pPEDM = polyfit(zEx2,Uvals,nMax);%FINAL POLYNOMIAL COEFFICIENTS (OUTPUT)
 c_tilEDM = 0;
 c_tilPEDM = 0;
 
-if nMax<2
-
 for n = 0:nMax
 %Use equation (5).
-c_tilEDM = c_tilEDM + factorial(n).*pEDM(end-n).*(-1./(2*k_vect)).^n;
-c_tilPEDM = c_tilPEDM + factorial(n).*pPEDM(end-n).*(-1./(2*k_vect)).^n;
+ %c_tilEDM = c_tilEDM + factorial(n).*pEDM(end-n).*(-1./(2*k_vect)).^n;
+ %c_tilPEDM = c_tilPEDM + factorial(n).*pPEDM(end-n).*(-1./(2*k_vect)).^n;
 
 end
 
-else
+
 
 for n = 0:nMax
 %Use incomplete gamma function
@@ -219,7 +217,6 @@ for n = 0:nMax
  %c_tilPEDM = c_tilPEDM + factorial(n).*pPEDM(end-n).*(-1./(2*k_vect)).^n;
  c_tilPEDM = c_tilPEDM + (-1/2)^n*k_vect.^(-n)*pPEDM(end-n).*(gammainc(-2*k_vect*z_c,1+n,'lower'))*gamma(n+1);
 
-end
 end
 
 %Calculate RMS differences (equation (9) in mansuscript)

@@ -178,12 +178,13 @@ for iWin = 1:numel(windowList)
     Properties = struct('h',h,'g',g,'T',T);
     
     %Get Doppler shift velocities
-    out_DS_i = get_doppler_shift_velocities(Spectrum,fit_param,Properties);
-    
+    %tic;
+    out_DS_i = get_doppler_shift_velocities_nsp(Spectrum,fit_param,Properties);
+    %toc;
 
 
-out(iWin) = find_current_depth_profile(out_DS_i.wavenumbers,out_DS_i.Ux,out_DS_i.Uy,h);
-
+out(iWin) = find_current_depth_profile(out_DS_i.wavenumbers,out_DS_i.Ux_filt,out_DS_i.Uy_filt,h);
+out(iWin).NSP = out_DS_i;
 end
 
 
