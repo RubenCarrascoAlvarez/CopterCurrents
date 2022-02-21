@@ -168,7 +168,8 @@ end
 
 cDoppGuess = [fit_param.Ux_2D(im),fit_param.Uy_2D(im)];
 
-Ufit = fminsearch(@(U) 1-nsp_doppler_shift_extraction(Spectrum,P,wavenumbers(jj),U(1),U(2)),cDoppGuess);
+options = optimset('Display','off');%Turn off display output
+Ufit = fminsearch(@(U) 1-nsp_doppler_shift_extraction(Spectrum,P,wavenumbers(jj),U(1),U(2)),cDoppGuess,options);
 
 [SNR_fit,P_k,G] = nsp_doppler_shift_extraction(Spectrum,P,wavenumbers(jj),Ufit(1),Ufit(2));
 
