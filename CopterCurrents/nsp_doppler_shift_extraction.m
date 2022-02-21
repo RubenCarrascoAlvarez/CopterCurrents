@@ -1,4 +1,4 @@
-function [SNR,P_k,G] = nsp_doppler_shift_extraction(Spectrum,params,kval,U,V)
+function [SNR,P_k,G,inds] = nsp_doppler_shift_extraction(Spectrum,params,kval,U,V)
 
 %This function calcalates the signal-to-noise ratio of the defined spectral
 %signal function weighted by a function defining the linear dispersion of
@@ -70,6 +70,11 @@ omegaFun = @(kx,ky) sqrt((params.g*sqrt(kx.^2 + ky.^2) + params.T*sqrt(kx.^2 + k
 %Frequency width of weighting function (1/e^2 halfwidth)
 a = params.omegaWidth;
 
+if ~isfield(params,'logFlag')
+    params.logFlag = 0;
+end
+
+
 if isfield(params,'kWidth')
     a_k = params.kWidth;
 else
@@ -88,6 +93,11 @@ KX =     Spectrum.Kx_3D(inds);%: 3D Kx grid corresponding to Spectrum.power_Spec
 KY =     Spectrum.Ky_3D(inds);%: 3D Ky grid corresponding to Spectrum.power_Spectrum [rad/m]
 W =      Spectrum.W_3D(inds);%: 3D W grid corresponding to Spectrum.power_Spectrum [rad/sec]
 
+if params.logFlag
+   P_k = log(P_k);
+   P_k = P_k - min(P_k(:));    
+end
+
 
 K = sqrt(KX.^2 + KY.^2);
 order = 2;
@@ -97,10 +107,13 @@ if ~isnan(kval)
     P_k = P_k.*exp( -2*((K-kval)/a_k).^order);
 end
 
+n = -1;
 %Define weighting function G
 G1 = exp( -2*((W - omegaFun( KX, KY))/a).^order);
 G2 = exp( -2*((W + omegaFun(-KX,-KY))/a).^order);
-G = G1+G2;
+G3 = exp( -2*((W - omegaFun( KX, KY)+2*n*5.9938)/a).^order);
+G4 = exp( -2*((W + omegaFun(-KX,-KY)+2*n*5.9938)/a).^order);
+G = G1+G2+G3+G4;
 
 P_k(~isfinite(P_k)) = 0;
 InP = P_k.*G;
@@ -108,5 +121,6 @@ InP = P_k.*G;
 signal = sum(InP(:))/sum(G(:));
 noise = sum(P_k(:).*(1-G(:)))/sum(1-G(:));
 SNR = signal./noise;
+%SNR = signal;
 
 end

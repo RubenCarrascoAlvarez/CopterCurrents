@@ -156,11 +156,13 @@ omegaFun_kth = @(k,theta) sqrt((params.g*k + params.T*k.^3).*tanh(k*params.h)) +
 
 %Frequency width of weighting function (1/e^2 halfwidth)
 a = params.omegaWidth;
-
+n = -1.0;
 %Define weighting function G
 G1 = exp( -2*((omegaM - omegaFun_kth( kval,thetaM))/a).^2);
 G2 = exp( -2*((omegaM + omegaFun_kth(-kval,thetaM))/a).^2);
-G = G1+G2;
+G3 = exp( -2*((omegaM - omegaFun_kth(kval,thetaM)+2*n*5.9938)/a).^2);
+G4 = exp( -2*((omegaM + omegaFun_kth(-kval,thetaM)+2*n*5.9938)/a).^2);
+G = G1+G2+G3+G4;
 
 P_k(~isfinite(P_k)) = 0;
 InP = P_k.*G;

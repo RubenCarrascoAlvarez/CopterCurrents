@@ -69,7 +69,6 @@ function out_fit = get_doppler_shift_velocities_nsp(Spectrum,fit_param,Propertie
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Parse inputs, set defaults if needed.
 
-
 if ~exist('verboseFig','var')
     verboseFig = 0;
 end
@@ -144,7 +143,7 @@ wavenumbers = fit_param.wavenumbers;
 
 for jj = 1:numel(fit_param.wavenumbers)
   
-P = struct('h',h,'g',g,'T',T,'omegaWidth',omegaWidthFun(wavenumbers(jj)),'kWidth',fit_param.kWidth);
+P = struct('h',h,'g',g,'T',T,'omegaWidth',omegaWidthFun(wavenumbers(jj)),'kWidth',fit_param.kWidth,'logFlag',fit_param.logFlag);
 
 snrG = zeros(size(fit_param.Ux_2D));
 for i = 1:size(fit_param.Ux_2D,1)
@@ -158,8 +157,12 @@ end
 if verboseFig
 figure(1002);
 %subplot(1,3,1);
-imagesc(fit_param.Uy_2D(1,:),fit_param.Ux_2D(:,1),snrG);colorbar;axis image;
-xlabel('U_y [m/s]');ylabel('U_x [m/s]');title(sprintf('SNR: k = %.3f rad/m',wavenumbers(jj)));
+%imagesc(fit_param.Uy_2D(1,:),fit_param.Ux_2D(:,1),snrG);colorbar;axis image;
+contourf(-fit_param.Uy_2D,-fit_param.Ux_2D,snrG,20);colorbar;axis image;
+xlabel('$U_y$ [m/s]','Interpreter','latex');ylabel('$U_x$ [m/s]','Interpreter','latex');
+title(sprintf('SNR: $k = %.2f$ rad/m',wavenumbers(jj)),'Interpreter','latex','FontWeight','normal');
+%title(sprintf('SNR: wavenumber = %.2f rad/m',wavenumbers(jj)),'FontWeight','normal');
+grid on;
 drawnow;
 end
 

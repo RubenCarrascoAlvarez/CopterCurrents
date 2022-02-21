@@ -1,4 +1,4 @@
-function out_fit = get_doppler_shift_velocities(Spectrum,fit_param,Properties)
+function out_fit = get_doppler_shift_velocities(Spectrum,fit_param,Properties,Scyl)
 
 
 %This function extracts Doppler shift velocities representing the
@@ -99,6 +99,13 @@ if ~isfield(fit_param,'Outlier_filter')
 end
 
 
+%Cylinder spectrum flag
+if exist('Scyl','var')
+    cyl_flag = 0;
+else
+    cyl_flag = 1;
+end
+
 %Initial the output structure:
 out_fit.wavenumbers = fit_param.wavenumbers;
 out_fit.Ux = zeros(1,numel(fit_param.wavenumbers));
@@ -120,15 +127,17 @@ for jj = 1:numel(fit_param.wavenumbers)
     P = struct('h',h,'g',g,'T',T,'omegaWidth',omegaWidthFun(wavenumbers(jj)));
     %Properties.omegaWidth = fit_param.omegaWidthFun(fit_param.wavenumbers(jj));
     %[~,Scyl,~] = k_cylinder_nsp(Spectrum,Properties,fit_param.wavenumbers(jj),0,0,[],fit_param.include2ndHarmonic,fit_param.logFlag);
-    [~,Scyl,~] = k_cylinder_nsp(Spectrum,P,wavenumbers(jj),0,0,[],fit_param.include2ndHarmonic,fit_param.logFlag);%parfor version
     
-    kjv = linspace(wavenumbers(jj)-0.05,wavenumbers(jj)+0.05,11);
-    Scyl.P_k = 0;
-    for ik = 1:numel(kjv)
-        [~,Scyl0,~] = k_cylinder_nsp(Spectrum,P,kjv(ik),0,0,[],fit_param.include2ndHarmonic,fit_param.logFlag);%parfor version
-        Scyl.P_k = Scyl.P_k + Scyl0.P_k;
-        figure(202);imagesc(Scyl.P_k);colorbar;drawnow;
+    if cyl_flag
+        [~,Scyl,~] = k_cylinder_nsp(Spectrum,P,wavenumbers(jj),0,0,[],fit_param.include2ndHarmonic,fit_param.logFlag);%parfor version
     end
+%     kjv = linspace(wavenumbers(jj)-0.05,wavenumbers(jj)+0.05,11);
+%     Scyl.P_k = 0;
+%     for ik = 1:numel(kjv)
+%         [~,Scyl0,~] = k_cylinder_nsp(Spectrum,P,kjv(ik),0,0,[],fit_param.include2ndHarmonic,fit_param.logFlag);%parfor version
+%         Scyl.P_k = Scyl.P_k + Scyl0.P_k;
+%         figure(202);imagesc(Scyl.P_k);colorbar;drawnow;
+%     end
         
         %Evaluate the NSP on grid of points to avoid other local maxima
     snrG = zeros(size(fit_param.Ux_2D));
@@ -143,9 +152,9 @@ for jj = 1:numel(fit_param.wavenumbers)
     %[Imax,Jmax] = ind2sub(size(snrG),im);
     %%
     
-     figure(1002);
+     figure(1001);
      subplot(1,3,1);
-     imagesc(fit_param.Uy_2D(1,:),fit_param.Ux_2D(:,1),snrG);colorbar;axis image;
+     contourf(fit_param.Uy_2D,fit_param.Ux_2D,snrG,20);colorbar;axis image;
      xlabel('U_y [m/s]');ylabel('U_x [m/s]');title(sprintf('SNR: k = %.3f rad/m',wavenumbers(jj)));
      drawnow;
 
@@ -161,7 +170,7 @@ omegaFun_kth = @(k,theta) sqrt((g*k + T*k.^3).*tanh(k*h)) + 0*Ufit(1)*cos(theta)
 %tic;
 [SNR_fit,SpecCylinderCS,G] = k_cylinder_nsp(Spectrum,P,wavenumbers(jj),Ufit(1),Ufit(2),Scyl,fit_param.include2ndHarmonic,fit_param.logFlag);
 %toc;
-figure(1002);subplot(1,3,2);imagesc(...
+figure(1001);subplot(1,3,2);imagesc(...
     SpecCylinderCS.thetaM(1,:),...
     SpecCylinderCS.omegaM(:,1),...
     log10(SpecCylinderCS.P_k));colorbar;set(gca,'YDir','normal');drawnow;
@@ -169,7 +178,7 @@ hold on;
 plot(SpecCylinderCS.thetaM(1,:),omegaFun_kth(wavenumbers(jj),SpecCylinderCS.thetaM(1,:)),'--w');
 hold off;
 
-figure(1002);subplot(1,3,3);imagesc(...
+figure(1001);subplot(1,3,3);imagesc(...
     SpecCylinderCS.thetaM(1,:),...
     SpecCylinderCS.omegaM(:,1),...
     G);colorbar;set(gca,'YDir','normal');drawnow;
