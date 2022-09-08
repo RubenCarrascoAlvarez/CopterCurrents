@@ -63,7 +63,7 @@ on the documentation remains as DISCO.
 
 CopterCurrents's home page is at:
 
-	https://hzg.de/coptercurrents/
+	https://ms.hereon.de/coptercurrents/
 
 Please be sure to visit this site for information, documentation,
 tutorials, news, etc.
