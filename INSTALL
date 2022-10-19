@@ -75,18 +75,17 @@ There are some basic steps to building and installing CopterCurrents:
 	let us to use OpenCV for camera calibration. The 'Camera Calibration Toolbox' is optional, 
 	CopterCurrents provide his own camera calibration method (FOV calibration). 
 
-	Download url: 	http://www.vision.caltech.edu/bouguetj/calib_doc/download/index.html
-	Toolbox manual: http://www.vision.caltech.edu/bouguetj/calib_doc/
-
+	Download url: https://doi.org/10.22002/D1.20164
+	
 	Author: Jean-Yves Bouguet,jean-yves.bouguet@intel.com. 
-
-	Installation instructions: After download the file, unzip the content in the following folder:
-
-	../CopterCurrents/external_libraries/TOOLBOX_calib/
-
-	A camera calibration by 'Camera Calibration Toolbox' is provided with CopterCurrents: 
-	../Calibration_examples/Matlab_Caltech/Phantom3_3840
-
+		
+	Jean-Yves Bouguet (2022). Camera Calibration Toolbox for Matlab (1.0).CaltechDATA.
+	
+	Download the file calib doc.zip, then unzip the content of the file tool-box_calib_2015_10_14.zip in the following folder: 
+	../CopterCurrents/external libraries/TOOLBOX calib/
+	
+	A 'Camera Calibration Toolbox’ example is provided by CopterCurrents:
+	../Calibration examples/Matlab Caltech/Phantom3 3840
 
 - OpenCV (optional)
 
